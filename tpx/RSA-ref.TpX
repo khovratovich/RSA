@@ -50,7 +50,7 @@
   \put(232.44,65.20){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{QR-Strong RSA}}
   \put(374.17,102.05){\fontsize{5.69}{6.83}\selectfont \makebox[0pt]{for many bases}}
   \put(104.88,130.39){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Fractional Root}}
-  \put(62.36,73.70){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Low order}}
+  \put(62.36,73.70){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Low Order}}
   \end{picture}%
 \else
   \setlength{\unitlength}{1bp}%
@@ -67,7 +67,7 @@
   \put(232.44,65.20){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{QR-Strong RSA}}
   \put(374.17,102.05){\fontsize{5.69}{6.83}\selectfont \makebox[0pt]{for many bases}}
   \put(104.88,130.39){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Fractional Root}}
-  \put(62.36,73.70){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Low order}}
+  \put(62.36,73.70){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Low Order}}
   \end{picture}%
 \fi
 \end{figure}
