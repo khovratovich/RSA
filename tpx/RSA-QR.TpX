@@ -1,0 +1,59 @@
+%<TpX v="5" ArrowsSize="0.7" StarsSize="1" DefaultFontHeight="5" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="2" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.3">
+%  <rect x="60" y="110" w="40" h="18" rx="2" ry="2" fill="greenyellow"/>
+%  <text x="80" y="118" t="Factoring" h="4" halign="c"/>
+%  <text x="80" y="123" t="Discrete Logarithm" h="4" halign="c"/>
+%  <rect x="60" y="90" w="40" h="10" rx="2" ry="2" fill="palegreen"/>
+%  <text x="80" y="94" t="RSA" h="4" halign="c"/>
+%  <rect x="60" y="59" w="40" h="22" rx="2" ry="2" fill="mediumseagreen"/>
+%  <text x="80" y="76" t="Strong RSA" h="4" halign="c"/>
+%  <line x1="80" y1="109" x2="80" y2="100" arr1="h44"/>
+%  <line x1="80" y1="89" x2="80" y2="82" arr1="h44"/>
+%  <text x="80" y="61" t="Pseudo-free" h="4" halign="c"/>
+%  <text x="79" y="113" t="Order" h="4" halign="c"/>
+%  <line x1="140" y1="90" x2="100" y2="80" arr1="h44" li="dash"/>
+%  <rect x="8" y="70" w="40" h="10" rx="2" ry="2" fill="mediumseagreen"/>
+%  <text x="28" y="74" t="Adaptive Root" h="4" halign="c"/>
+%  <rect x="120" y="90" w="40" h="10" rx="2" ry="2" fill="palegreen"/>
+%  <text x="140" y="94" t="Diffie-Hellman" h="4" halign="c"/>
+%  <text x="80" y="71" t="QR-Strong RSA" h="4" halign="c"/>
+%  <line x1="60" y1="110" x2="30" y2="80" arr1="h44"/>
+%  <line x1="90" y1="109" x2="139" y2="100" arr1="h44"/>
+%  <text x="104" y="84" t="for many bases" h="2" halign="c" fill="greenyellow"/>
+%  <text x="80" y="66" t="Fractional Root" h="4" halign="c"/>
+%</TpX>
+\begin{figure}
+\centering
+\ifpdf
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(442.20, 206.93)(0,0)
+  \put(0,0){\includegraphics{RSA-QR.pdf}}
+  \put(209.76,172.91){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Factoring}}
+  \put(209.76,187.09){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Discrete Logarithm}}
+  \put(209.76,104.88){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{RSA}}
+  \put(209.76,53.86){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Strong RSA}}
+  \put(209.76,11.34){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Pseudo-free}}
+  \put(206.93,158.74){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Order}}
+  \put(62.36,48.19){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Adaptive Root}}
+  \put(379.84,104.88){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Diffie-Hellman}}
+  \put(209.76,39.69){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{QR-Strong RSA}}
+  \put(277.80,76.54){\fontsize{5.69}{6.83}\selectfont \makebox[0pt]{for many bases}}
+  \put(209.76,25.51){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Fractional Root}}
+  \end{picture}%
+\else
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(442.20, 206.93)(0,0)
+  \put(0,0){\includegraphics{RSA-QR}}
+  \put(209.76,172.91){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Factoring}}
+  \put(209.76,187.09){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Discrete Logarithm}}
+  \put(209.76,104.88){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{RSA}}
+  \put(209.76,53.86){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Strong RSA}}
+  \put(209.76,11.34){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Pseudo-free}}
+  \put(206.93,158.74){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Order}}
+  \put(62.36,48.19){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Adaptive Root}}
+  \put(379.84,104.88){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Diffie-Hellman}}
+  \put(209.76,39.69){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{QR-Strong RSA}}
+  \put(277.80,76.54){\fontsize{5.69}{6.83}\selectfont \makebox[0pt]{for many bases}}
+  \put(209.76,25.51){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Fractional Root}}
+  \end{picture}%
+\fi
+\end{figure}

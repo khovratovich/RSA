@@ -1,0 +1,40 @@
+%<TpX v="5" ArrowsSize="0.7" StarsSize="1" DefaultFontHeight="5" DefaultSymbolSize="30" ApproximationPrecision="0.01" PicScale="1" Border="2" BitmapRes="20000" HatchingStep="2" DottedSize="0.5" DashSize="1" LineWidth="0.3">
+%  <rect x="60" y="88" w="39.9999" h="32" rx="2" ry="2" fill="greenyellow"/>
+%  <text x="80" y="115" t="Factoring" h="4" halign="c"/>
+%  <text x="80" y="110" t="Discrete Logarithm" h="4" halign="c"/>
+%  <text x="79" y="100" t="RSA" h="4" halign="c"/>
+%  <text x="79" y="95" t="Strong RSA" h="4" halign="c"/>
+%  <text x="79" y="90" t="Order" h="4" halign="c"/>
+%  <rect x="60" y="68" w="40" h="10" rx="2" ry="2" fill="mediumseagreen"/>
+%  <text x="80" y="72" t="Adaptive Root" h="4" halign="c"/>
+%  <text x="80" y="105" t="Diffie-Hellman" h="4" halign="c"/>
+%  <line x1="80" y1="87" x2="80" y2="78" arr1="h44"/>
+%</TpX>
+\begin{figure}
+\centering
+\ifpdf
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(124.72, 158.74)(0,0)
+  \put(0,0){\includegraphics{GRA assum.pdf}}
+  \put(62.36,138.90){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Factoring}}
+  \put(62.36,124.72){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Discrete Logarithm}}
+  \put(59.53,96.38){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{RSA}}
+  \put(59.53,82.20){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Strong RSA}}
+  \put(59.53,68.03){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Order}}
+  \put(62.36,17.01){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Adaptive Root}}
+  \put(62.36,110.55){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Diffie-Hellman}}
+  \end{picture}%
+\else
+  \setlength{\unitlength}{1bp}%
+  \begin{picture}(124.72, 158.74)(0,0)
+  \put(0,0){\includegraphics{GRA assum}}
+  \put(62.36,138.90){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Factoring}}
+  \put(62.36,124.72){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Discrete Logarithm}}
+  \put(59.53,96.38){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{RSA}}
+  \put(59.53,82.20){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Strong RSA}}
+  \put(59.53,68.03){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Order}}
+  \put(62.36,17.01){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Adaptive Root}}
+  \put(62.36,110.55){\fontsize{11.38}{13.66}\selectfont \makebox[0pt]{Diffie-Hellman}}
+  \end{picture}%
+\fi
+\end{figure}
