@@ -186,16 +186,16 @@ The \emph{Factoring} assumption states that for random safe primes $p,q$ it is d
 \subsection{Trivial reductions}
 
 \begin{enumerate}
-    \item The Adaptive Root assumption implies the Low Order assumption. Indeed, for an element $w$ of order $l$ one can compute $q$-th root by setting $u = w^{q^{-1}\bmod{l}}$. 
+    \item The Adaptive Root assumption implies the Low Order assumption. Indeed, for an element $w$ of order $l$ one can compute a $q$-th root by setting $u = w^{q^{-1}\bmod{l}}$. 
     \item The Strong RSA assumption implies the RSA assumption (trivially).
     \item The Strong RSA assumption implies the QR-Strong assumption (almost trivial, due to the size of $QR_N$).
     \item The Low Order assumption unconditionally holds in $QR_N$ because it contains no elements of low order.
-    \item If the RSA modulus is the product of strong primes then the order problem in $QR_N$ is equivalent to factoring.
+    \item If the RSA modulus is the product of strong primes then the Order assumption in $QR_N$ is equivalent to factoring.
 \end{enumerate}
 
 \subsection{Nontrivial reductions}
 \begin{theorem}\cite{bach1984discrete}
-The Discrete Logarithm assumption in the RSA group is equivalent to factoring.
+The Discrete Logarithm assumption in the RSA group is equivalent to the Factoring assumption.
 \end{theorem}
 
 \begin{theorem}\cite[Th. 1]{DBLP:conf/ccs/CramerS99}
@@ -211,11 +211,11 @@ Most RSA assumptions hold in the Generic Group Model.
 \begin{theorem}\cite{DBLP:conf/eurocrypt/DamgardK02}
 The Strong RSA assumption holds in the Generic Group Model.
 \end{theorem}
-This implies that the RSA assumption is hard too. The factoring problem can not be formulated in the Generic Group Model as the group size is unknown to the algorithm.
+This implies that the RSA assumption is hard too. The Factoring assumption can not be formulated in the Generic Group Model as the group size is unknown to the algorithm.
 \begin{theorem}\cite{cryptoeprint:2019:1229}
 The Adaptive Root assumption holds in the Generic Group Model.
 \end{theorem}
-However, these results give little insight to the actual security of RSA assumptions, as most existing attacks on RSA do use the integer form of the group elements. Computing the Jacobi symbol (see below) is an example of an easy problem which is provably hard in the Generic Group Model.
+However, these results give little insight to the actual security of RSA assumptions, as most existing RSA attacks use the integer form of the group elements. For example, computing the Jacobi symbol (see below) in an RSA group is easy despite being provably hard in the Generic Group Model.
 
 \subsection{Generic Ring Model}
 
@@ -226,11 +226,11 @@ If there is a generic ring algorithm that computes $f(x)$ such that $f(x)\equiv 
 \end{lemma}
 
 \begin{theorem}\cite{aggarwal2011equivalence}
-If there is an generic ring algorithm that solves the Strong RSA problem by outputting rational functions $u=\frac{f(x)}{g(x)}$ and $l=\frac{h(x)}{q(x)}$, then $N$ can be factored with the same complexity.
+If there is an generic ring algorithm that breaks the Strong RSA assumption by outputting rational functions $u=\frac{f(x)}{g(x)}$ and $l=\frac{h(x)}{q(x)}$, then $N$ can be factored with the same complexity.
 \end{theorem}
-The idea of proof is the following. If $l$ is a rational function that is a constant $c$ on many points, we reduce $u^c$ to Lemma 2. Otherwise it must happen that $l$ as a rational function is a constant $c\bmod{q}$ which yields a factor by GCD.
+The idea of the proof is the following. If $l$ is a rational function that is a constant $c$ on many points, we reduce $u^c$ to Lemma 2. Otherwise it must happen that $l$ as a rational function is a constant $c\bmod{q}$ which yields a factor by GCD.
 
-These results hint that an algorithm that solves an RSA problem without factoring must use the integer representation of the RSA ring. An example is an algorithm for Jacobi symbol computation, which works in $O(\log^3(N))$. However, computing the Jacobi symbol (or to do any other membership test of certain algebraic property) is as hard as factoring in the Generic Ring Model~\cite{DBLP:journals/joc/JagerS13}.
+These results hint that an algorithm that breaks an RSA assumption without breaking the Factoring assumption must use the integer representation of the RSA ring. An example is an algorithm for Jacobi symbol computation, which works in $O(\log^3(N))$. However, computing the Jacobi symbol (or to do any other membership test of certain algebraic property) is as hard as factoring in the Generic Ring Model~\cite{DBLP:journals/joc/JagerS13}.
 
 
 \subsection{Pseudo-freeness}
@@ -242,10 +242,10 @@ Let $A$ be a set of constants and $\mathcal{F}(A)$ be the free group generated b
 Informally, a group is pseudo-free if no efficient algorithm can find a non-trivial relation among randomly chosen group elements.
 
 \begin{theorem}\cite{DBLP:conf/tcc/Rivest04,DBLP:conf/eurocrypt/Micciancio05}
-Assume that $N$ is the product of two safe primes. Then the Strong RSA assumption is equivalent to that the RSA group is pseudo-free.
+Assume that $N$ is the product of two safe primes. Then the Strong RSA assumption is equivalent to the RSA group being pseudo-free.
 \end{theorem}
 
-\begin{theorem}~\cite{DBLP:conf/tcc/Rivest04} The Order problem is hard in a pseudo-free group.
+\begin{theorem}~\cite{DBLP:conf/tcc/Rivest04} The Order assumption holds in a pseudo-free group.
 \end{theorem}
 
 \begin{theorem}\cite{DBLP:journals/ijisec/HasegawaIST09}
@@ -256,12 +256,12 @@ Therefore, the Strong RSA assumption implies the Order assumption if $N$ is the 
 
 \subsection{Non-equivalence}
 
-One may ask if the listed assumptions can be proven equivalently hard for all groups. This is not true.
+One may ask if the listed assumptions can be proven equivalently hard for all groups. This is not possible.
 \begin{theorem}\cite{LM71,DBLP:conf/tcc/Rivest04} The Order, RSA, Strong RSA, and Discrete Log assumptions are independent: for each pair of assumptions there exist a group where only one of them holds.
 \end{theorem}
 
 \subsection{Common modulus}
-It is easy to see that an Adaptive Root oracle is equivalent to an RSA decryption of the same ciphertext under multiple prime encryption exponents. It was shown that if the decryption exponent is relatively small ($N^{0.3}$ and smaller) then $N$ can be factored. It was also demonstrated that if multiple decryption exponents all smaller than $h(N)$ are present then the factorization can be obtained from public exponents, and $h(N)$ for which it is feasible, approaches $N$ if the number of exponents grows. It is unclear if this property can be used to reduce the Adaptive Root assumption to factoring.
+It is easy to see that an Adaptive Root oracle is equivalent to an RSA decryption of the same ciphertext under multiple prime encryption exponents. It was shown that if the decryption exponent is relatively small ($N^{0.3}$ and smaller) then $N$ can be factored. It was also demonstrated that if multiple decryption exponents all smaller than $h(N)$ are present then the factorization can be obtained from public exponents, and $h(N)$ for which it is feasible, approaches $N$ if the number of exponents grows. It is unclear if this property can be used to reduce the Adaptive Root assumption to the Factoring assumption.
 
 
 \begin{figure}
