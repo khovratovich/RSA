@@ -36,7 +36,7 @@ Most assumptions are formulated with respect to the security parameter $\lambda$
 
 \begin{definition}
 The \emph{RSA Assumption} states that no
-efficient adversary can compute $e$-th roots a given random group element for a predefined $e$. Specifically,
+efficient adversary can compute $l$-th roots a given random group element for a random $l$. Specifically,
 it holds for $GGen$ if for any probabilistic polynomial time adversary $\mathcal{A}$:
 $$
 Pr
@@ -44,14 +44,14 @@ Pr
 &\mathbb{G}\xleftarrow{\$}GGen(\lambda)\\
 u^l = w :
 & (w,l)\xleftarrow{\$}\mathbb{G}\\
-&u \xleftarrow{} \mathcal{A}(\mathbb{G},w)
+&u \xleftarrow{} \mathcal{A}(\mathbb{G},w,l)
 \end{bmatrix}\leq \mathrm{negl}(\lambda)
 $$
 \end{definition}
 
 \begin{definition}
 The \emph{Strong RSA Assumption} states that no
-efficient adversary can compute roots of a random group elements. Specifically,
+efficient adversary can compute roots of a random group element. Specifically,
 it holds for $GGen$ if for any probabilistic polynomial time adversary $\mathcal{A}$:
 $$
 Pr
@@ -64,9 +64,10 @@ u^l = w,\; l>1 :
 $$
 \end{definition}
 
+Let $N$ denote the RSA modulus and $QR_N$ being the set of quadratic residues (those that are squares of other elements) in $Z_N = \{0,1,2,\ldots,N-1\}$.
 \begin{definition}
-The \emph{QR-Strong RSA Assumption} states that 
-efficient adversary can compute no roots of a given random quadratic residue. Specifically,
+The \emph{QR-Strong RSA Assumption} states that no 
+efficient adversary can compute a root of a given random quadratic residue. Specifically,
 it holds for $GGen$ if for any probabilistic polynomial time adversary $\mathcal{A}$:
 $$
 Pr
