@@ -26,11 +26,13 @@ Only assumptions that have not been broken are listed here. However, the amount 
 
 Several protocols that exploit the fact that the RSA group has unknown order for some parties has been recently carried out to other groups of unknown order~\cite{DBLP:conf/crypto/BonehBBF18,cryptoeprint:2019:1229}, particularly class groups~\cite{buchmann2001survey}. The latter is particularly interesting as finding the order of a class group is considered to be a hard problem without any secret setup like in RSA. Therefore, it is interesting whether various RSA assumptions also hold in other groups of unknown order.
 
-Ethereum Foundation is particularly interested in the research on the Adaptive Root assumption, as it is necessary for the Wesolowski VDF protocol as well as for an efficient polynomial commitment protocol to hold~\cite{DBLP:conf/eurocrypt/Wesolowski19}. So far we found no evidence suggesting its validity or otherwise.
+Ethereum Foundation is particularly interested in the research on the Adaptive Root assumption, as it is necessary for the Wesolowski VDF protocol as well as for an efficient polynomial commitment protocol to hold~\cite{DBLP:conf/eurocrypt/Wesolowski19,cryptoeprint:2019:1229}. So far we found no evidence suggesting its validity or otherwise.
 
 This report is a short survey on the existing RSA assumptions and relations among them. It does not cover assumptions arising in  groups of known order, such as various versions of Diffie-Hellman or Discrete Log. 
 
 \section{Definitions}
+
+Most assumptions are formulated with respect to the security parameter $\lambda$. This means that the group parameters are selected so that the assumption holds with overwhelming probability as a function of $\lambda$ (for example, with $1-\frac{1}{2^{\lambda}}$. The set of parameters as a function of $\lambda$ is modelled as a group generator $GGen(\lambda)$.
 
 \begin{definition}
 The \emph{RSA Assumption} states that no
