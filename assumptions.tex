@@ -81,7 +81,7 @@ $$
 \end{definition}
 
 \begin{definition}
-The \emph{$r$-Strong RSA Assumption} states that 
+The \emph{$r$-Strong RSA Assumption} states that an 
 efficient adversary can compute at most $r$-th roots of a given random group element. Specifically,
 it holds for $GGen$ if for any probabilistic polynomial time adversary $\mathcal{A}$:
 $$
@@ -104,7 +104,7 @@ square roots is easy~\cite{cryptoeprint:2019:1229}.
     \end{itemize}
 
 \begin{definition}
-The \emph{Adaptive Root Assumption} [with security parameter $\lambda$] holds for
+The \emph{Adaptive Root Assumption}   holds for
 $GGen$ if there is no efficient adversary $(\mathcal{A}_0, \mathcal{A}_1)$ that succeeds in the following task. First,
 $\mathbb{G}$ outputs an element $w\in \mathbb{G}$ and some state $st$. Then, a random prime in $\mathrm{Primes}(\lambda)$ is chosen
 and $\mathcal{A}_1(w,st)$ outputs $w^{1/l}\in\mathbb{G}$. For all efficient $(\mathcal{A}_0, \mathcal{A}_1)$:
@@ -113,7 +113,7 @@ Pr
 \begin{bmatrix}
 &\mathbb{G}\xleftarrow{\$}GGen(\lambda)\\
 & (w,st)\xleftarrow{}\mathcal{A}_0(\mathbb{G})\\
-u^l = w\neq 1 :& l\xleftarrow{\$}\mathrm{Primes}(\lambda)\\
+u^l = w\neq 1 :& l\xleftarrow{\$}\Pi_{\lambda}=\mathrm{Primes}(\lambda)\\
 &u \xleftarrow{} \mathcal{A}_1(w,l,st)
 \end{bmatrix}\leq \mathrm{negl}(\lambda)
 $$
@@ -121,7 +121,7 @@ $$
 Remarks:
 \begin{itemize}
     \item In~\cite{cryptoeprint:2019:1229} $\mathcal{A}_0$ selects $w,st$ randomly, which is probably an error. Also $\mathcal{A}_1$ does not take $w$ as input, which does not make sense.
-    \item The number of primes in $\mathrm{Primes}(\lambda)$ should correspond to the hardness of factoring: it is possible to 
+    \item The number of primes in $\Pi_{\lambda}$ should be exponential in $\lambda$: it is possible to precompute $w$ using $2^{|\Pi_{\lambda}|}$ exponentiations. Then, an adversary with $2^M$ memory can store intermediate exponents and compute adaptive roots using $2^{|\Pi_{\lambda}|-M}$ exponentiations for each.
 \end{itemize}
 \begin{definition}
 The \emph{Order assumption}. For any probabilistic polynomial time adversary $\mathcal{A}$ computing the order of a random element is hard: 
