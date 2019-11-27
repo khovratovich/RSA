@@ -5,7 +5,8 @@
 
 \pagestyle{plain}
 
-\usepackage{amssymb,amsthm,amsmath,amsfonts,longtable, comment,array, ifpdf, hyperref,url}
+\usepackage{amssymb}
+\usepackage{amsthm,amsmath,amsfonts,longtable, comment,array, ifpdf, hyperref,url}
 \usepackage{graphicx}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
@@ -156,7 +157,7 @@ $$
 Pr
 \begin{bmatrix}
 &\mathbb{G}\xleftarrow{\$}GGen(\lambda)\\
-u^l = g^{a} : & g \xleftarrow{\$}\mathbb{G}\\
+u^l = g^{a},\;l \nmid a : & g \xleftarrow{\$}\mathbb{G}\\
 & (u,l,a) \xleftarrow{} \mathcal{A}(\mathbb{G},g)\\
 & \text{and }a,l<2^{poly(\lambda)}
 \end{bmatrix}\leq \mathrm{negl}(\lambda)
@@ -192,7 +193,7 @@ $$
 \end{definition}
 
 \begin{definition}
-The \emph{Factoring} assumption states that for random safe primes $p,q$ it is difficult to factor $N=pq$.
+The \emph{Factoring} assumption states that for random  primes $p,q$ it is difficult to factor $N=pq$.
 \end{definition}
 
 
@@ -254,7 +255,7 @@ Let $A$ be a set of constants and $\mathcal{F}(A)$ be the free group generated b
 \begin{definition}Let $X$ be a set of variables and consider equations of form $w_1 = w_2$ where $w_1,w_2\in\mathcal{A}\cup \mathcal{X}$, where $\mathcal{A}$ is a set of products of elements from $A$ and $\mathcal{X}$ is a a set of products of elements from $X$. A group $G$ is \emph{pseudo-free} if no efficient adversary can find an equation that does not have solutions in $\mathcal{F}(A)$ and a solution to this equation in $G$ (i.e. where $X$ and $A$ are mapped to some elements of $G$), where the mapping from $A$ to $G$ is a random function, chosen for every run of the adversary.
 \end{definition}
 
-Informally, a group is pseudo-free if no efficient algorithm can find a non-trivial relation among randomly chosen group elements.
+Informally, a group is pseudo-free if no efficient algorithm can find a non-trivial relation among randomly chosen group elements. Recall that a \emph{safe prime} $p$ has form $p=2p'+1$ where $p'$ is also prime. It is unknown if there are infinitely many safe primes.
 
 \begin{theorem}\cite{DBLP:conf/tcc/Rivest04,DBLP:conf/eurocrypt/Micciancio05}
 Assume that $N$ is the product of two safe primes. Then the Strong RSA assumption is equivalent to the RSA group being pseudo-free.
@@ -271,9 +272,12 @@ Therefore, the Strong RSA assumption implies the Order assumption if $N$ is the 
 
 \subsection{Non-equivalence}
 
-One may ask if the listed assumptions can be proven equivalently hard for all groups. This is not possible.
-\begin{theorem}\cite{LM71,DBLP:conf/tcc/Rivest04} The Order,  Strong RSA, and Discrete Log assumptions are independent: for each pair of assumptions there exist a group where only one of them holds.
+One may ask if the listed assumptions can be proven equivalently hard for all groups. One result suggests it is unlikely to be the case: decisional versions of the assumptions (where the adversary answers if there is a solution rather than finds it) were shown to be independent.
+\begin{theorem}\cite{LM71,DBLP:conf/tcc/Rivest04} The Decisional Order,  Strong RSA, and Discrete Log decisional assumptions are independent: for each pair of assumptions there exist a group where only one of them holds.
 \end{theorem}
+We do not give examples here as they involve a non-trivial construction of a set with a no recursive membership test.
+
+Note however, that the decisional strong RSA assumption no longer implies the decisional RSA assumption. It is thus an interesting research question, whether independence results can be demonstrated for computational assumptions (i.e. for their current form).
 
 \subsection{Common modulus}
 It is easy to see that an Adaptive Root oracle is equivalent to an RSA decryption of the same ciphertext under multiple prime encryption exponents. It was shown that if the decryption exponent is relatively small ($N^{0.3}$ and smaller) then $N$ can be factored. It was also demonstrated that if multiple decryption exponents all smaller than $h(N)$ are present then the factorization can be obtained from public exponents, and $h(N)$ for which it is feasible, approaches $N$ if the number of exponents grows. It is unclear if this property can be used to reduce the Adaptive Root assumption to the Factoring assumption.
@@ -306,6 +310,7 @@ It is easy to see that an Adaptive Root oracle is equivalent to an RSA decryptio
     \item Is the Adaptive Root assumption hard in the Generic Ring Model?
     \item Is the Adaptive Root assumption equivalent to factoring in the Generic Ring Model? 
     \item Can an AR oracle be used to compute the group order using the low-decryption-exponent attacks on RSA?
+    \item Adapt the independence results of \cite{LM71} to the modern definitions of the RSA assumptions, if possible.
 \end{enumerate}
 
 \bibliographystyle{alpha}
