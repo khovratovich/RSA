@@ -21,7 +21,7 @@
 
 \section{Introduction}
 
-Computing modulo an integer with secret factors, also known as RSA, is not only as a public-key cryptosystem, but also  a foundation of several other protocols: cryptographic accumulators~\cite{DBLP:conf/crypto/CamenischL02}, verifiable delay functions~\cite{DBLP:conf/eurocrypt/Wesolowski19,DBLP:conf/crypto/BonehBBF18}, polynomial commitment schemes~\cite{cryptoeprint:2019:1229}, range proofs, etc.. These protocols are proven secure (w.r.t. to certain adversaries) under various assumptions on the hardness of some problems in the RSA group.  Some of these assumptions had been shown to imply the other under certain conditions on the modulus or unconditionally, but many relations remain unknown. 
+Computing modulo an integer $N$ with secret prime factors $p$ and $q$, also known as RSA, is not only as a public-key cryptosystem, but also  a foundation of several other protocols: cryptographic accumulators~\cite{DBLP:conf/crypto/CamenischL02}, verifiable delay functions~\cite{DBLP:conf/eurocrypt/Wesolowski19,DBLP:conf/crypto/BonehBBF18}, polynomial commitment schemes~\cite{cryptoeprint:2019:1229}, range proofs, etc.. These protocols are proven secure (w.r.t. to certain adversaries) under various assumptions on the hardness of some problems in the RSA group.  Some of these assumptions had been shown to imply the other under certain conditions on the modulus or unconditionally, but many relations remain unknown. 
 
 Only assumptions that have not been broken are listed here. However, the amount of public scrutiny from the cryptographic community into the research on their validity differs a lot. Whereas the RSA assumption has withstood the decades of attacks on the RSA encryption, the Adaptive Root assumption is relatively new so that finding it invalid would not surprise many scholars.
 
@@ -293,7 +293,7 @@ It is easy to see that an Adaptive Root oracle is equivalent to an RSA decryptio
 \begin{figure}
     \centering
     \includegraphics[scale=0.7]{pics/RSA-reg.pdf}
-    \caption{Relations among different assumptions in an RSA subgroup with no restrictions on $N$. Except for factoring, the same structure holds for other groups.}
+    \caption{Relations among different assumptions in an RSA group with no restrictions on $N$.  Except for factoring, the same structure holds for other groups. Note that the RSA group $Z_N^*$ is known to contain a small order subgroup $H = \{-1,1\}$, so in the Low Order and Adaptive Root assumption we additionally set $w\notin\{-1,1\}$.}
     \label{fig:rsa}
 \end{figure}
 
