@@ -1,0 +1,48 @@
+
+\documentclass[a4paper]{article}
+\usepackage[hmargin=2cm,vmargin=2cm]{geometry}
+
+
+\pagestyle{plain}
+
+\usepackage{amssymb}
+\usepackage{amsthm,amsmath,amsfonts,longtable, comment,array, ifpdf, hyperref,url}
+\usepackage{graphicx}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
+\title{Cost of factoring}
+\author{Dmitry Khovratovich\\Ethereum Foundation}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The complexity of factoring integers has been a long standing problem for decades. Many cryptosystems rely their security on the hardness of factoring, with RSA being the most famous example. From the theoretical perspective, it has not been shown to be NP-complete (and many scholars believe it is not), so there is hope for fast algorithms. In practice, the best algorithms are subexponential: factoring an $n$-bit number takes about $2^{7(\sqrt[3]{n})}$ operations, and there not has been much progress in this direction since early 1990s.
+
+In this report we analyze the most recent factorization records and try to estimate the concrete security of RSA parameters given the state of the art.
+
+
+\section{Factoring algorithms}
+
+A naive way to factor a number $N$ is trial division: try to divide $N$ by every possible prime number up to $\sqrt{N}$. The cost of this method is $O(\sqrt{N})$, and it is actually preferable for finding small factors. However, when, as in the RSA cryptosystem, the number to be factorized is a product of two equal-size primes
+$$
+N = pq
+$$
+a better generic approach is needed.
+
+An example of the latter is the method of squares, which is still the base in the fastest factoring algorithms. Here we search for numbers $x,y <N$ that satisfy an equation
+\begin{equation}\label{eq:square}
+x^2 \equiv y^2 \pmod{N},
+\end{equation}
+It implies that $N$ divides $(x^2-y^2)$, meaning that  either $(x-y)$ or $(x+y)$ is likely to be a prime factor of $N$, which can be computed using a simple GCD algorithm. 
+
+In order to find a pair $(x,y)$ for Eq.~\eqref{eq:square}, one can compute $Q(x_i) = x_i^2\bmod{N}$ for many $x_i$ and check which of those have only small prime factors (say, smaller than $B$; such numbers are called \emph{$B$-smooth} and the factors are called \emph{factor base}): 
+$$
+Q(x_i) = p_1^{q_1}p_2^{q_2}\cdots p_b^{q_b}
+$$For each $x_i$ of this kind we store $\mathbf{q}=(q_1 \bmod 2,q_2 \bmod 2,\ldots,q_b \bmod 2)$. It is easy to see that $b+1$ such $\mathbf{q}$ are linearly dependent, which is equivalent that their $x_i$ multiply up to some $v^2$, which yields Eq.~\eqref{eq:square}. The first step (finding $x_i$ with smooth $Q(x_i)$ is called \emph{sieving} and second step (finding a linear dependence) is called \emph{linear algebra step}).
+The complexity of this method is determined by $b$: smooth $x_i$ for bigger $b$ are more frequent, but take more trial divisions to test and increase the length of the linear algebra step. The optimal $b$ yields the complexity of about $2^{2.6\sqrt{n}}$ where $n=\log_2 N$. The improvement, called \emph{quadratic field sieve}, tests for $B$-smoothness faster using the Eratosphene sieve, bringing the complexity of $2^{1.3\sqrt{n}}$
+\end{document}
