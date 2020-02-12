@@ -12,12 +12,16 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 
-\title{Cost of factoring}
+\title{Cost of Factoring}
 \author{Dmitry Khovratovich\\Ethereum Foundation}
 
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+    We provide security estimates for RSA moduli factoring based on the most recent factorization records and the development of large-scale cryptographic hardware. We demonstrate that by a conservative estimate, the 2048-bit number provides at most 90 bits of security, the 3072-bit number -- 112 bits of security, and at least a 4000-bit number is needed to match the 128-bit key recovery security of AES-128. 
+\end{abstract}
 
 \section{Introduction}
 
@@ -25,7 +29,7 @@ The complexity of factoring integers has been a long standing problem for decade
 
 From the theoretical perspective, factorization has not been shown to be NP-complete (and many scholars believe it is not), so there is hope for fast algorithms. In practice, however, the best algorithms are subexponential: factoring an $n$-bit number takes about $2^{O(\sqrt[3]{n})}$ operations~\cite{lenstra1993development}, and there not has been much progress in the complexity since early 1990s. The hardest numbers to factor are those having two factors of the same length, these are known as RSA moduli.
 
-Based on existing factorization records~\cite{DBLP:conf/eurocrypt/CavallarDLLMMRAGGLMMMPPZ00,DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10,DBLP:journals/iacr/BaiTZ12}, various individuals and institutions have tried to estimate the security of RSA moduli of different lengths based on the potential algorithmic and computing progress~\cite{lenstra2001selecting,DBLP:conf/asiacrypt/LenstraTSKDHL03,lenstra2004key,abdalla2016algorithms,barker2016nist}. However, they all suffer from the following drawbacks:
+Based on existing factorization records~\cite{DBLP:conf/eurocrypt/CavallarDLLMMRAGGLMMMPPZ00,DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10,DBLP:journals/iacr/BaiTZ12,factor795}, various individuals and institutions have tried to estimate the security of RSA moduli of different lengths based on the potential algorithmic and computing progress~\cite{lenstra2001selecting,DBLP:conf/asiacrypt/LenstraTSKDHL03,lenstra2004key,abdalla2016algorithms,barker2016nist}. However, they all suffer from the following drawbacks:
 \begin{itemize}
     \item They assume that Moore's law will continue for long time, which is not the case anymore.
     \item They assume cryptanalytic progress (=improvement in generic factoring algorithms), which has not happened.
@@ -44,8 +48,8 @@ In this report we make a more careful analysis of factoring algorithms, the most
         Super-optimistic & 830 & 1425 & 1875 & 2600 &13000\\
         Optimistic& 1000 & 1700 & 2200 & 3000 & 14500\\
         Realistic & 1350 &2200 & 2750& 3600 & 17500\\
-        Pessimistic & 1575 & 2400&3000& 4000 & 19500\\
-        Super-pessimistic& 1900 & 2900 &3600& 4800 & 23400\\         \hline\hline
+        conservative & 1575 & 2400&3000& 4000 & 19500\\
+        Super-conservative& 1900 & 2900 &3600& 4800 & 23400\\         \hline\hline
         \multicolumn{6}{|c|}{Third-party estimates}\\\hline
         \cite{lenstra2004key} - conservative & 1400 & 3100 & 4200 & 7000&-\\
         \cite{lenstra2004key} - optimistic & 1280 & 2200 & 3072 & 4200&-\\
@@ -59,6 +63,7 @@ In this report we make a more careful analysis of factoring algorithms, the most
 
 \section{Factoring algorithms}
 
+\paragraph{Development of factoring techniques.}
 A naive way to factor a number $N$ is trial division: try to divide $N$ by every possible prime number up to $\sqrt{N}$. The cost of this method is $O(\sqrt{N})$, and it is actually preferable for finding small factors. However, when, as in the RSA cryptosystem, the number to be factorized is a product of two equal-size primes
 $$
 N = pq
@@ -79,28 +84,29 @@ The complexity of this method is determined by $Q$, $x_i$, and $b$: the smoothne
 
 A memoryless alternative to QS is the elliptic curve factoring method (ECM)~\cite{lenstra1987factoring}. The idea is to construct a random curve $E$ over $Z_p$, whose order (close to $p$) is $b$-smooth. This can be detected by computing $Q=[p']P$ over $Z_N$ where $P$ is some point and $p'$ is a product of primes smaller than $b$, then $Q_x$ will have a common divisor with $N$. The complexity $2^{1.4\sqrt{n}}$ is close to QFS.
 
-\paragraph{Number Field Sieve} The Number Field Sieve (NFS) algorithm is currently the fastest known factoring method, developed in late 1980s for $N$ of special form and later adapted for all numbers. It has heuristic complexity 
+\paragraph{Number Field Sieve.} The Number Field Sieve (NFS) algorithm is currently the fastest known factoring method, developed in late 1980s for $N$ of special form and later adapted for all numbers. It has heuristic complexity 
 \begin{equation}\label{eq:sievecomp}
 L(n) \approx 2^{2.4 \sqrt[3]{n}\sqrt[1.5]{\ln n}-16}
     \end{equation}
-    basic operations, where each operation is an arithmetic action over numbers modulo $N$. This translates straightforwardly to CPU operations: recent factorization records spend about $50 L(n)$ CPU cycles. NFS is so fast because it generates much smaller, of order $N^{1/5}$ candidate smooth numbers
+    basic operations, where each operation is an arithmetic action over numbers modulo $N$. This translates straightforwardly to CPU operations: recent factorization records spend about $50 L(n)$ CPU cycles. NFS is so fast because it generates much smaller, of order $N^{1/6}$, candidate smooth numbers for which square roots are known or can be computed easily.
 
-To set up the NFS, we first select two\footnote{Coppersmith [?] suggested that the use of several polynomials may reduce the constant 2.4 in Eq.~\eqref{eq:sievecomp} by a small factor but no recent factorization has used it.} irreducible polynomials $f_1,f_2$ over $Z[X]$ are chosen with some common root $m$ modulo $N$. For recent factorization records  the polynomials have degree $d_1=5$ and $d_2=1$. We also select the smoothness bounds $b_1,b_2\approx \sqrt{L(n)}$.
+To set up the NFS, we first select two\footnote{Coppersmith \cite{coppersmith1993modifications} suggested that the use of several polynomials may reduce the constant 2.4 in Eq.~\eqref{eq:sievecomp} by a small factor but no recent factorization has used it.} irreducible polynomials $f_1,f_2$ over $Z[X]$ are chosen with some common root $m$ modulo $N$. For recent factorization records  the polynomials have degree $d_1=5$ and $d_2=1$. We also select the smoothness bounds $b_1,b_2\approx \sqrt{L(n)}$.
 
-The algorithm proceeds as follows:
+The algorithm relies on the following properties:
 \begin{itemize}
     \item The norm for a linear polynomial $a-b\alpha_1\in \mathbb{Z}[\alpha_1]$ is defined as $v_i(a,b) =  b^{d_i}f_i(a/b)\in \mathbb{Z}$ for $i=1,2$. The polynomial $(a-b\alpha_1)$ belongs to the prime ideals in $\mathbb{Q}(\alpha_1)=\mathbb{Q}[X]/f_i(X)$ whose norms are prime factors of $v_i(a,b)$.  Apparently  for all $a,b$ we can compute a square root of $(a-b\alpha_1)$ which gives us quadratic relations.
     \item The common root $m$ implies that the mappings $$
     \phi_1:\sum_j a_j \alpha_1^j\rightarrow\sum_j a_j m^j;\quad \phi_2:\sum_j a_j \alpha_2^j\rightarrow\sum_j a_j m^j
     $$
     are homomorphisms and $\phi_1(a-b\alpha_1) \equiv \phi_2(a-b\alpha_2) \pmod{N}$. 
-    \item We search for $(a,b)$ with $b_1$-smooth $v_1(a,b)$ and $b_2$-smooth $v_2(a,b)$. Due to low degree of $f_1,f_2$ both $v_1(a,b)$ and $v_2(a,b)$ are relatively small and thus have sufficiently high probability of smoothness, so that after testing $O(L(n))$ pairs we get $O(\sqrt{L(n)})$ smooth numbers.  The smoothness is tested with \emph{lattice sieve}, an improved version of quadratic sieve. ECM is also used for small factors.  After we generate $O(\sqrt{L(n)})$ smooth numbers, we seek for a linear relation among the exponent vectors, which is equivalent to finding an element of the kernel of certain sparse matrix $M$.  The relation yields the products $\sigma_1\in\mathbb{Q}(\alpha_1) $ and $\sigma_2\in\mathbb{Q}(\alpha_2)$ that are squares in their algebraic fields of $\tau_1,\tau_2$ respectively, and simultaneously $\phi_1(\sigma_1) \equiv \phi_2(\sigma_2)\pmod{N}$. The latter equation yields \eqref{eq:square} with $x=\phi_1(\tau_1)$ and $y=\phi_2(\tau_2)$.
 \end{itemize}
+
+Based on that, we search for $(a,b)$ with $b_1$-smooth $v_1(a,b)$ and $b_2$-smooth $v_2(a,b)$. Due to low degree of $f_1,f_2$ both $v_1(a,b)$ and $v_2(a,b)$ are relatively small and thus have sufficiently high probability of smoothness, so that after testing $O(L(n))$ pairs we get $O(\sqrt{L(n)})$ smooth numbers.  The smoothness is tested with \emph{lattice sieve}, an improved version of quadratic sieve. ECM is also used for small factors.  After we generate $O(\sqrt{L(n)})$ smooth numbers, we seek for a linear relation among the exponent vectors, which is equivalent to finding an element of the kernel of certain sparse matrix $M$.  The relation yields the products $\sigma_1\in\mathbb{Q}(\alpha_1) $ and $\sigma_2\in\mathbb{Q}(\alpha_2)$ that are squares in their algebraic fields of $\tau_1,\tau_2$ respectively, and simultaneously $\phi_1(\sigma_1) \equiv \phi_2(\sigma_2)\pmod{N}$. The latter equation yields \eqref{eq:square} with $x=\phi_1(\tau_1)$ and $y=\phi_2(\tau_2)$. 
 A more detailed 
 description with pseudocode can be found in \cite{winograd2012number}.
 %It turns out that the numbers $a,b$ to generate sufficiently many smooth norms can be small enough, and the norms are also of order $N^{o(1)}$. This gives the complexity \eqref{eq:sievecomp}.
 
-It has been highlighted that the coefficients of $f_1,f_2$ should be chosen to have as many prime factors as possible [?=768].  The coefficients should increase from leading terms to low terms.
+It has been highlighted that the coefficients of $f_1,f_2$ should be chosen to have as many prime factors as possible~\cite{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10}.  The coefficients should increase from leading terms to low terms.
 
 
 \section{Complexity of Number Field Sieve}
@@ -110,7 +116,7 @@ There are three major steps contributing to the total complexity:
 \begin{itemize}
     \item Polynomial selection. It was shown that certain coefficients increase the sieving performance. It was however also estimated that it is worth to spend only $o(L(n))$ for the search.
     \item Sieving that yields $r=O(\sqrt{L(n)})$ relations. 
-    \item Matrix kernel search for a matrix of size $r\times r$. The Wiedemann algorithm is currently used. It is conjectured to run in time $O(wr^2)$ where $r$ is the number of relations and $w$ is the average column weight (related to the smoothness bound and in practice equals to a few hundred).
+    \item Matrix kernel search for a matrix of size $r\times r$. The Wiedemann algorithm~\cite{DBLP:journals/tit/Wiedemann86} is currently used. It is conjectured to run in time $O(wr^2)$ where $r$ is the number of relations and $w$ is the average column weight (related to the smoothness bound and in practice equals to a few hundred).
 \end{itemize}
 The smoothness bounds and the degree of $f_1$ are chosen to minimize the total complexity:
 \begin{itemize}
@@ -119,7 +125,7 @@ The smoothness bounds and the degree of $f_1$ are chosen to minimize the total c
 $d_1 \approx \left(\frac{2.1\log N}{-0.6+1.4\log \log N }\right)^{1/3}$, which gives $d=5$ for modulus up to 800 bits and $d=6$ up to 1524 bits. 
 \end{itemize}
 
-\subsection{Practical costs} We analyze the most recent factorization records [?]. To factor the 768-bit RSA modulus, the following parameters were used:
+\subsection{Practical costs} We analyze the most recent factorization records~\cite{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10,DBLP:journals/iacr/BaiTZ12,factor795}. To factor the 768-bit RSA modulus, the following parameters were used:
 \begin{itemize}
     \item $d_1= 5$.
     \item $b_1,b_2 \approx 2^{30}$ (a few prime factors up to $2^{40}$ were allowed). 
@@ -127,57 +133,57 @@ $d_1 \approx \left(\frac{2.1\log N}{-0.6+1.4\log \log N }\right)^{1/3}$, which g
 \end{itemize}
 and the following costs were incurred (each core is a 1 GHz CPU with 1-2 GB RAM):
 \begin{itemize}
-    \item 100 core-years spent for polynomial search in 2005-2007 [?].
-    \item 2000 core-years for sieving, yielding $2^{31}$ relations after filtering [?].
+    \item 100 core-years spent for polynomial search in 2005-2007.
+    \item 2000 core-years for sieving, yielding $2^{31}$ relations after filtering.
     \item The matrix has dimension $2^{27.5}$  with average row weight $2^7$. It took 200 core-years.
 \end{itemize}
 Each core-year is about $2^{55}$ cycles, so the total complexity is $2^{66}$ cycles. 
 
 The memory requirements are proportional to the number of relations we obtain, i.e. $\sqrt{L(n)}$. However, the memory usage is structured. Both sieving and matrix steps use the memory in a predictable way with only a few random accesses. Therefore, one may expect a memory-optimized version of the algorithm with similar time complexity.
 
-The factorization of the 795-bit number required only 900 core-years on novel cores, or estimated 1700 core-years on old cores. It was concluded that various algorithmic improvements yield the constant factor of 3.
-
-
- 
-\paragraph{Security level for current CPU-restrained attacks.} Since the factorization of 795-bit number required 900 core-years ($2^{35}$ core-seconds), we presume that electricity costs dominate in the attack. We take $2^8$ Wt as an average core consumption and $2^{-5}$ as a fair kWth price, so we  estimate the total cost of the attack as   $2^{17.8}$ USD, which roughly equivalents to 78-bit security by our definition.
+The factorization of the 795-bit number~\cite{factor795} required only 900 core-years on novel cores, or estimated 1700 core-years on old cores. It was concluded that various algorithmic improvements yield the constant factor of 3. We presume that electricity costs dominate in the attack. We take $2^8$ Wt as an average core consumption and $2^{-5}$ as a fair kWth price, so we  estimate the total cost of the attack as   $2^{17.8}$ USD, which roughly equivalents to 78-bit security by our definition (see Section~\ref{sec:measure}) for details.
 
 \section{Bigger moduli}
 \subsection{Approximations}\label{sec:approx}
-Formula ~\eqref{eq:sievecomp} implies that the 1024-bit number can be factored with complexity $2^{69}$ vs the 768-bit complexity of $2^{59}$, or 1000 times harder. This difference has been reasserted by the authors of the 768-bit factorization [?]. We can take this as a reference point and make further estimates for 1536-bit and bigger moduli. The smoothness bounds and corresponding memory requirements will grow:
+Formula ~\eqref{eq:sievecomp} implies that the 1024-bit number can be factored with complexity $2^{69}$ vs the 768-bit complexity of $2^{59}$, or 1000 times harder. This difference has been reasserted by the authors of the 768-bit factorization~\cite{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10}. We can take this as a reference point and make further estimates for 1536-bit and bigger moduli. The smoothness bounds and corresponding memory requirements will grow:
 \begin{itemize}
-    \item Smoothness $2^{35}$ for 1024-bit would give complexity $2^{70}$
-    \item Smoothness $2^{41}$ for 1524 bits would give complexity $2^{85}$
-    \item Smoothness $2^{47}$ for 2048 bits would give complexity $2^{95}$.
+    \item Bound $2^{35}$ for 1024-bit would give complexity $2^{70}$
+    \item Bound $2^{41}$ for 1524 bits would give complexity $2^{85}$
+    \item Bound $2^{47}$ for 2048 bits would give complexity $2^{95}$.
  \end{itemize}
  
 It was pointed out that a straightforward application of formula~\eqref{eq:sievecomp} overestimates the real costs of factoring bigger moduli even if we stay with the same hardware \cite{DBLP:conf/eurocrypt/KleinjungDLPS17}. We expect it due to the multiple reasons. Not all of them are equally likely to contribute, and the contributions differ.
 \begin{itemize}
-    \item Use of specialized hardware. This was already suggested in several works [?]. However, only a few expect that the hardware could give the advantage not by a small factor but by several orders of magnitude.
+    \item Use of specialized hardware. This was already suggested in several works~\cite{bernstein01,DBLP:conf/asiacrypt/LenstraSTT02,shamir2003factoring}. However, only a few expect that the hardware could give the advantage not by a small factor but by several orders of magnitude.
     \item Improved polynomial search. This should contribute a small but noticeable factor and will definitely happen.
-    \item Improved matrix algorithms. It was pointed out that algorithms like Block Lanczos can be more efficient that Wiedemann if run on a single machine (which we expect for hardware factorizations).
-    \item Improved generic algorithms (NFS as a whole). The progress in NFS for RSA moduli has been little, though many related algorithms have been improved recently [?]. We do not expect this to happen in the short term.
+    \item Improved matrix algorithms. It was pointed out that algorithms like Block Lanczos can be more efficient that Wiedemann if run on a single machine (which we expect for hardware factorizations)~\cite{thome2016modified}.
+    \item Improved generic algorithms (NFS as a whole). The progress in NFS for RSA moduli has been little, though many related algorithms have been improved recently~\cite{DBLP:conf/crypto/0001B16}. We do not expect this to happen in the short term.
     \item Increased transistor density and thus reduced electricity costs (also known as Moore's law) since 2019 (the time of the most recent factorization record). This direction seems to be almost exhausted.
 \end{itemize}
  
  \subsection{Circuits for NFS}
  
+ 
+ Even though GPU- and FPGA-based optimizations were outlined in a number of papers~\cite{Archer10,DBLP:conf/ches/MieleBKL14}, we presume that a large-scale factoring effort would switch to ASIC to minimize costs.
+ 
+ 
  Given the big advantage the dedicated circuits have over generic CPUs in cryptocurrency mining, it is natural to expect that specialized hardware can reduce the costs significantly. However, since NFS uses a lot of memory and is not trivial to parallelize, estimating the performance advantage is not an easy task.
  
  Let us investigate different steps of NFS for the implementation in ASIC:
  \begin{itemize}
-    \item \textbf{Polynomial search}.  This step is memoryless though a few sieving tests might be needed to benchmark the most promising candidates. As the sieving efficiency is not expected to grow that much with polynomial change [?], we expect that it might not be even implemented in ASIC for future factoring as simple CPUs might suffice.
+    \item \textbf{Polynomial search}.  This step is memoryless though a few sieving tests might be needed to benchmark the most promising candidates. As the sieving efficiency is not expected to grow that much with polynomial change~\cite{kleinjung2006polynomial}, we expect that it might not be even implemented in ASIC for future factoring as simple CPUs might suffice.
  
-     \item \textbf{Sieving}. In this step we generate a lot of integers and test them for smoothness.  There are many versions of this process. Currently, for smoothness bound $b$, we test about $O(b^2)$ integers in time $O(b^2)$ using close to $O(b)$ memory. The asymptotic costs are thus would better be approximated by $O(b^3)$ rather than $O(b^2)$ as it is done now, but we can argue that the amount of memory used to factor recent challenges was not big enough to justify this increase. The sieving  can be done memoryless using elliptic-curve factoring, which was advocated by Bernstein[?]. But even
+     \item \textbf{Sieving}. In this step we generate a lot of integers and test them for smoothness.  There are many versions of this process. Currently, for smoothness bound $b$, we test about $O(b^2)$ integers in time $O(b^2)$ using close to $O(b)$ memory. The asymptotic costs are thus would better be approximated by $O(b^3)$ rather than $O(b^2)$ as it is done now, but we can argue that the amount of memory used to factor recent challenges was not big enough to justify this increase. The sieving  can be done memoryless using elliptic-curve factoring, which was advocated by Bernstein~\cite{bernstein01}. But even
      the memory-expensive versions of sieving use memory in quite predictive way with minimum random accesses. We thus expect that the $O(b^2)$ costs are the right approximation for hardware.
      
-     Several specialized devices have been proposed in the past for sieving~\cite{pelzl2005area,bachimanchi2007fpga,izu2007cairn}, though no one reached production, and their cost advantage looks pessimistic today. Franke et al. suggested \cite{DBLP:conf/ches/FrankeKPPPS05} special hardware device which produces $2^{27}$ relations per year for smoothness bound $2^{35}$ and utilizes 136 GB of onboard RAM and 30kW power consumption. $2^{11}$ such machines are needed to factor a 1024-bit number within a year. Given the Moore's law advance from 2005 to 2019, we see that such machines are only about 20x more efficient than regular clusters. TWIRL [?], TWINKLE [?], and Cracker [?] are similar designs, none of which even reached the VLSI design stage.
+     Several specialized devices have been proposed in the past for sieving~\cite{DBLP:conf/ches/Shamir99,pelzl2005area,bachimanchi2007fpga,izu2007cairn}, though no one reached production, and their cost advantage looks pessimistic today. Franke et al. suggested \cite{DBLP:conf/ches/FrankeKPPPS05} special hardware device which produces $2^{27}$ relations per year for smoothness bound $2^{35}$ and utilizes 136 GB of onboard RAM and 30kW power consumption. $2^{11}$ such machines are needed to factor a 1024-bit number within a year. Given the Moore's law advance from 2005 to 2019, we see that such machines are only about 20x more efficient than regular clusters. TWIRL~\cite{shamir2003factoring}, TWINKLE~\cite{DBLP:conf/ches/Shamir99}, and Cracker are similar designs, none of which even reached the VLSI design stage.
      
      Given predictable memory patterns, we would expect that the sieving step can be implemented in hardware relatively easy with the advantage close to the advantage that Bitcoin miners have (see calculations below).
      
      \item \textbf{Matrix step}. Now we aim to find an element in the matrix kernel where the matrix is sparse and has dimensions $b\times b$. The Wiedemann algorithm on desktops runs in $O(b^2)$ time and currently  $b$ is chosen so that it is only a bit slower than the sieving step. We expect two improvements: 
      \begin{itemize}
-         \item Use of faster memory on-chip and thus a significant advantage in latency. In similar settings, Equihash miner, which utilizes 150 MB of RAM is $2^{17}$ times more cost-efficient than a CPU miner [?].
-         \item Use of faster, ASIC-dedicated matrix algorithms, as outlined in [?]. Bernstein conjectured that a sparse matrix of size $b^2$ (i.e. with $O(b)$ non-zero elements) can be processed in time $O(b^{1.5})$.
+         \item Use of faster memory on-chip and thus a significant advantage in latency. In similar settings, Equihash miner, which utilizes 150 MB of RAM is $2^{17}$ times more cost-efficient than a CPU miner~\cite{equihashminer}.
+         \item Use of faster, ASIC-dedicated matrix algorithms, as outlined in~\cite{bernstein01}. Bernstein conjectured that a sparse matrix of size $b^2$ (i.e. with $O(b)$ non-zero elements) can be processed in time $O(b^{1.5})$.
      \end{itemize}
      If  the latter conjecture holds, one can select a different sieving-matrix tradeoff. For example, we can factor a number $N'=N^{4/3}$ using the same $b^2$ integer, which are  tested for $b^{4/3}$-smoothness rather than for $b$-smoothness in the same $O(b^2)$ time yielding $b^{4/3}$ relations. These relations would then be processed in $b^{4/3*2} = b^2$ time. Thus this would give us huge increase in performance, cutting of the security level by 25\%. One should expect that the real advantage will be smaller.
       
@@ -189,11 +195,11 @@ In this section we suggest the following cost-inspired metric to evaluate the se
 Given that
 \begin{itemize}
     \item Bitcoin network calculates $2^{67}$ double SHA-256 hashes per second (equivalent to $2^{69}$ AES calls).
-    \item Bitcoin mining is profitable with hashpower available on the market at costs of about $2^{59}$ hashes per USD [?].
+    \item Bitcoin mining is profitable with hashpower available on the market at costs of about $2^{59}$ hashes per USD\footnote{Calculated from \url{https://www.nicehash.com/my/marketplace/SHA256} at February 10th, 2020}.
     \item The total amount of Bitcoin mined per day ($2^{16}$ seconds) is equivalent to about $2^{24}$ (16M) USD.
 \end{itemize}
 we can reliably estimate that $2^{80}$ AES calls would (amortized) cost about  $2^{19}$ USD when using ASICs. Note that an AES call takes $2^{-28}$ seconds on a modern CPU, so that $2^{80}$ calls would take $2^{52}$ core-seconds, or $2^{35}$ USD, which is $2^{16}$ times less cost-efficient. 
-We can make similar GPU estimates given the recent SHA-1 attack costs ($2^{63}$ hashes for $2^{16}$ USD) [?], which match well the ASIC-over-GPU advantage known from Bitcoin mining.
+We can make similar GPU estimates given the recent SHA-1 attack costs ($2^{63}$ hashes for $2^{16}$ USD)~\cite{cryptoeprint:2020:014}, which match well the ASIC-over-GPU advantage known from Bitcoin mining.
 
 Based on that, we think of 128-bit security as if the cost to break the primitive would be $2^{48}$ times that of AES-128 with 80-bit key, or $2^{67}$. This is well beyond the world GDP ($2^{46.5}$ USD, or 108-bit security). 
 
@@ -205,7 +211,7 @@ It is not trivial to make a sensible estimate of what 256-bit security means, as
     \item 256-bit secure construction becomes 128-bit secure if half of its key is known or the best attacks get quadratic speed-up.
 \end{itemize}
 
-One can argue that memory-intensive computations would be less advantageous for ASICs due to the increased chip size. In practice, however, we see that Equihash miners, consuming 3 times as much electricity as desktops and using 150 MB of memory [?], produce $2^{18}$ times as many solutions per second. We thus conclude that the difference between CPU and ASIC is higher than $2^{15}$ even for big amounts of memory.
+One can argue that memory-intensive computations would be less advantageous for ASICs due to the increased chip size. In practice, however, we see that Equihash miners, consuming 3 times as much electricity as desktops and using 150 MB of memory ~\cite{equihashminer}, produce $2^{16}$ times as many solutions per second. We thus conclude that the difference between CPU and ASIC is close to $2^{15}$ even for big amounts of memory.
  
  
  
@@ -217,8 +223,8 @@ One can argue that memory-intensive computations would be less advantageous for 
     \item Super-optimistic. We assume that only CPU clusters will be effective for factoring of bigger numbers due to lack of interest from ASIC designers or due to lack of ASIC advantage. More time spent on polynomial selection won't give an advantage, and matrix step won't be improved.
     \item Optimistic. Here we assume that CPUs and GPUs will remain the main computing power, with GPU having the advantage $A_{hw}=2^3$ in costs. More time spent on polynomial selection would bring the factor $A_{ps}=2$ in performance, and matrix algorithms would improve with the same factor $A_{mtr}=2$. Moore's law will bring the factor $A_{Mr}$ of $2^2$.
     \item Realistic. ASICs will reduce the costs significantly by about $A_{hw}=2^{10}$ due to high memory requirements. Improved polynomial selection and a new matrix algorithm would bring factors $2^3$ each additionally. Moore's law still gives $2^2$.
-     \item Pessimistic. ASICs bring the reduction of $2^{16}$ we hoped for.
-     \item Super-pessimistic. A much faster matrix algorithm on-chip would allow factoring numbers with $A_{hw-mt}=1.2$ times more digits at the same cost.
+     \item conservative. ASICs bring the reduction of $2^{16}$ we hoped for.
+     \item Super-conservative. A much faster matrix algorithm on-chip would allow factoring numbers with $A_{hw-mt}=1.2$ times more digits at the same cost.
  \end{itemize}
 
 As has been explained, the cost $C(795)$ of factoring 795-bit number is $2^{17.8}$ USD.
@@ -226,11 +232,11 @@ Then we calculate the total cost $C(n)$ of factorization of an $n$-bit number in
 \begin{equation}
     C(n/A_{hw-mt}) = A_{hw}\cdot A_{ps} \cdot A_{mtr} \cdot A_{Mr} \cdot C(795) \cdot \frac{L(n)}{L(795)}.
 \end{equation}
-These estimates are valid for year 2022. One may want to estimate the costs by year 2030, where the reduction could come from better algorithms, cheaper electricity, and more efficient ASICs (i.e. Moore's law). We expect that in optimistic and realistic scenarios improvements will be negligible, whereas for the pessimistic scenarios we add the combined factor $2^5$ and $2^{10}$, respectively.
+These estimates are valid for year 2022. One may want to estimate the costs by year 2030, where the reduction could come from better algorithms, cheaper electricity, and more efficient ASICs (i.e. Moore's law). We expect that in optimistic and realistic scenarios improvements will be negligible, whereas for the conservative scenarios we add the combined factor $2^5$ and $2^{10}$, respectively.
  
-We have the results in Table~\ref{tab:cost}.
+We provide the results in Table~\ref{tab:cost}.
  \begin{table}[t]
-    
+    \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
         \begin{tabular}{c}
@@ -241,23 +247,29 @@ We have the results in Table~\ref{tab:cost}.
          795 & 200 K & 1.6 K& - & - & - \\
          900 & 3.2 M & 25 K & - & -\\
          1024 & 80 M & 640 K & 320 & 5 &-\\
-         1280 & 30 G & 240 M & 120 K & 1800\\
-         1536 & 4 T & 32 G & 16 M & 250 K\\
-         2048 & 32 P & 256 T & 128 G & 16 G\\
-         3076 & - & 120 P & 60 T & 7.5 T \\
-         4096 & - & - & - & 110 P \\
+         1280 & 30 G & 240 M & 120 K & 1800 &5\\
+         1536 & 4 T & 32 G & 16 M & 250 K&1800\\
+         2048 & 32 P & 256 T & 128 G & 16 G& 120 M\\
+         3072 & - & 120 P & 60 T & 7.5 T & 60 G\\
+         4096 & - & - & - & 110 P & 800 T\\
          \hline
     \end{tabular}
-    
-    \caption{Cost of RSA factoring in USD, prices and technology of year 2022. Pessimistic scenarios are considered for long moduli only.}
+    \end{center}
+    \caption{Cost of RSA factoring in USD, prices and technology of year 2022. conservative scenarios are considered for long moduli only.}
     \label{tab:cost}
 \end{table}
  
  Based on the same formula, we make our own estimates of the moduli length needed to achieve certain security level. We use the cost-security model defined in Section~\ref{sec:measure} and show the results in Table~\ref{tab:sec}.
+ 
  \section{Need for extensive research}
- 
- GPU-based optimizations were outlined in a number of papers~\cite{Archer10,DBLP:conf/ches/MieleBKL14}.
- 
+ We hightlight the need for advanced research, including VLSI designs and prototypes, in the following directions:
+ \begin{itemize}
+     \item Optimal ASICs for polynomial selection and resulting gains;
+     \item Use of ECM and other ASIC-friendly algorithms for smoothness testing;
+     \item Optimal sieving algorithms;
+     \item ASIC-efficient Wiedemann and Lanczos algorithms.
+     \item Use of different types of RAM on chip.
+ \end{itemize}
  \bibliographystyle{alpha}
 \bibliography{secure.bib}
 
