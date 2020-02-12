@@ -17,6 +17,25 @@ Mathematics, XXIV},
   note = {available at \url{https://www2.eecs.berkeley.edu/Pubs/TechRpts/1984/CSD-84-186.pdf}}
 }
 
+@inproceedings{DBLP:conf/eurocrypt/Pomerance84,
+  author    = {Carl Pomerance},
+  title     = {The Quadratic Sieve Factoring Algorithm},
+  booktitle = {{EUROCRYPT}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {209},
+  pages     = {169--182},
+  publisher = {Springer},
+  year      = {1984}
+}
+
+@article{lenstra1987factoring,
+  title={Factoring integers with elliptic curves},
+  author={Lenstra Jr, Hendrik W},
+  journal={Annals of mathematics},
+  pages={649--673},
+  year={1987},
+  publisher={JSTOR}
+}
 
 @inproceedings{DBLP:conf/stoc/BabaiFLS91,
   author    = {L{\'{a}}szl{\'{o}} Babai and
@@ -40,6 +59,14 @@ Mathematics, XXIV},
   year      = {1992}
 }
 
+@book{lenstra1993development,
+  title={The development of the number field sieve},
+  author={Lenstra, Arjen K and Hendrik Jr, W and others},
+  volume={1554},
+  year={1993},
+  publisher={Springer Science \& Business Media}
+}
+
 @inproceedings{DBLP:conf/ccs/CramerS99,
   author    = {Ronald Cramer and
                Victor Shoup},
@@ -48,6 +75,24 @@ Mathematics, XXIV},
   pages     = {46--51},
   publisher = {{ACM}},
   year      = {1999}
+}
+
+@article{lenstra2001selecting,
+  title={Selecting cryptographic key sizes},
+  author={Lenstra, Arjen K and Verheul, Eric R},
+  journal={Journal of cryptology},
+  volume={14},
+  number={4},
+  pages={255--293},
+  year={2001},
+  publisher={Springer}
+}
+
+@article{lenstra2004key,
+  title={Key Length. Contribution to The Handbook of Information Security},
+  author={Lenstra, Arjen K},
+  year={2004},
+  publisher={Citeseer}
 }
 
 @inproceedings{buchmann2001survey,
@@ -486,6 +531,14 @@ Mathematics, XXIV},
   year      = {2018}
 }
 
+@misc{cryptoeprint:2019:1494,
+    author = {Alex Ozdemir and Riad S. Wahby and Dan Boneh},
+    title = {Scaling Verifiable Computation Using Efficient Set Accumulators},
+    howpublished = {Cryptology ePrint Archive, Report 2019/1494},
+    year = {2019},
+    note = {\url{https://eprint.iacr.org/2019/1494}},
+}
+
 @misc{cryptoeprint:2019:1229,
     author = {Benedikt Bunz and Ben Fisch and Alan Szepieniec},
     title = {Transparent {SNARKs} from {DARK} Compilers},
@@ -493,3 +546,233 @@ Mathematics, XXIV},
     year = {2019},
     note = {\url{https://eprint.iacr.org/2019/1229}},
 }
+
+%%%%%%%%%%%%%%%%%%%%%% SURRVEY
+@inproceedings{DBLP:conf/asiacrypt/LenstraTSKDHL03,
+  author    = {Arjen K. Lenstra and
+               Eran Tromer and
+               Adi Shamir and
+               Wil Kortsmit and
+               Bruce Dodson and
+               James P. Hughes and
+               Paul C. Leyland},
+  title     = {Factoring Estimates for a 1024-Bit {RSA} Modulus},
+  booktitle = {{ASIACRYPT}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {2894},
+  pages     = {55--74},
+  publisher = {Springer},
+  year      = {2003}
+}
+
+@article{barker2016nist,
+  title={Nist special publication 800-57 part 1, revision 4},
+  author={Barker, Elaine and Dang, Quynh},
+  journal={NIST, Tech. Rep},
+  year={2016}
+}
+
+@article{abdalla2016algorithms,
+  title={Algorithms, key size and protocols report},
+  author={Abdalla, Michel and Bj{\o}rstad, Tor Erling and Cid, Carlos and Gierlichs, Benedikt and H{\"u}lsing, Andreas and Luykx, Atul and Paterson, Kenneth G and Preneel, Bart and Sadeghi, Ahmad-Reza and Spies, Terence and others},
+  journal={ECRYPT--Coordination \& Support Action},
+  year={2016}
+}
+
+%%%%%%%%%%%%%% CIRCUITS
+@article{pelzl2005area,
+  title={Area--time efficient hardware architecture for factoring integers with the elliptic curve method},
+  author={Pelzl, Jan and {\v{S}}imka, Martin and Kleinjung, Thorsten and Franke, Jens and Priplata, Christine and Stahlke, Colin and Drutarovsk{\`y}, Milo{\v{s}} and Fischer, Viktor and Paar, Christof},
+  journal={IEE Proceedings-Information Security},
+  volume={152},
+  number={1},
+  pages={67--78},
+  year={2005},
+  publisher={IET}
+}
+
+
+@inproceedings{DBLP:conf/ches/FrankeKPPPS05,
+  author    = {Jens Franke and
+               Thorsten Kleinjung and
+               Christof Paar and
+               Jan Pelzl and
+               Christine Priplata and
+               Colin Stahlke},
+  title     = {{SHARK:} {A} Realizable Special Hardware Sieving Device for Factoring
+               1024-Bit Integers},
+  booktitle = {{CHES}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {3659},
+  pages     = {119--130},
+  publisher = {Springer},
+  year      = {2005}
+}
+
+@phdthesis{bachimanchi2007fpga,
+  title={FPGA and ASIC implementation of rho and p-1 methods of factoring},
+  author={Bachimanchi, Ramakrishna},
+  year={2007},
+  school={Citeseer}
+}
+
+@article{izu2007cairn,
+  title={CAIRN 3: An FPGA implementation of the sieving step with the lattice sieving},
+  author={Izu, Tetsuya and Kogure, Jun and Shimoyama, S},
+  journal={Proc. of the 2007 Special-purpose Hardware for Attacking Cryptographic Systems (SHARCS 2007)},
+  pages={33--39},
+  year={2007}
+}
+
+%%%%%%%%%%%%%%%%%%%% FACTORING RECORDS
+@inproceedings{DBLP:conf/eurocrypt/CavallarDLLMMRAGGLMMMPPZ00,
+  author    = {Stefania Cavallar and
+               Bruce Dodson and
+               Arjen K. Lenstra and
+               Walter M. Lioen and
+               Peter L. Montgomery and
+               Brian Murphy and
+               Herman J. J. te Riele and
+               Karen Aardal and
+               Jeff Gilchrist and
+               G{\'{e}}rard Guillerm and
+               Paul C. Leyland and
+               Jo{\"{e}}l Marchand and
+               Fran{\c{c}}ois Morain and
+               Alec Muffett and
+               Chris Putnam and
+               Craig Putnam and
+               Paul Zimmermann},
+  title     = {Factorization of a 512-Bit {RSA} Modulus},
+  booktitle = {{EUROCRYPT}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {1807},
+  pages     = {1--18},
+  publisher = {Springer},
+  year      = {2000}
+}
+
+
+@article{DBLP:journals/iacr/BaiTZ12,
+  author    = {Shi Bai and
+               Emmanuel Thom{\'{e}} and
+               Paul Zimmermann},
+  title     = {Factorisation of {RSA-704} with {CADO-NFS}},
+  journal   = {{IACR} Cryptology ePrint Archive},
+  volume    = {2012},
+  pages     = {369},
+  year      = {2012}
+}
+
+@article{DBLP:journals/iacr/BaiBT12,
+  author    = {Shi Bai and
+               Richard P. Brent and
+               Emmanuel Thom{\'{e}}},
+  title     = {Root Optimization of Polynomials in the Number Field Sieve},
+  journal   = {{IACR} Cryptology ePrint Archive},
+  volume    = {2012},
+  pages     = {691},
+  year      = {2012}
+}
+
+
+
+@inproceedings{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10,
+  author    = {Thorsten Kleinjung and
+               Kazumaro Aoki and
+               Jens Franke and
+               Arjen K. Lenstra and
+               Emmanuel Thom{\'{e}} and
+               Joppe W. Bos and
+               Pierrick Gaudry and
+               Alexander Kruppa and
+               Peter L. Montgomery and
+               Dag Arne Osvik and
+               Herman J. J. te Riele and
+               Andrey Timofeev and
+               Paul Zimmermann},
+  title     = {Factorization of a 768-Bit {RSA} Modulus},
+  booktitle = {{CRYPTO}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {6223},
+  pages     = {333--350},
+  publisher = {Springer},
+  year      = {2010}
+}
+
+@phdthesis{winograd2012number,
+  title={Number Field Sieve: Pseudocodes and Software Implementation},
+  author={Winograd, Theodore Kemp},
+  year={2012}
+}
+
+@inproceedings{DBLP:conf/eurocrypt/KleinjungDLPS17,
+  author    = {Thorsten Kleinjung and
+               Claus Diem and
+               Arjen K. Lenstra and
+               Christine Priplata and
+               Colin Stahlke},
+  title     = {Computation of a 768-Bit Prime Field Discrete Logarithm},
+  booktitle = {{EUROCRYPT} {(1)}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {10210},
+  pages     = {185--201},
+  year      = {2017}
+}
+
+%%%%%%%%%%%%%%  GPU
+
+@misc{Archer10,
+    author = {Christopher Archer},
+    title = {GPU Integer Factorisation with the Quadratic Sieve},
+    howpublished = {University of Bath, Bachelor Thesis},
+    year = {2010},
+    note = {\url{
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.468.5904&rep=rep1&type=pdf}},
+}
+
+
+@misc{Lanc12,
+    author = {Harish Malla and Vilas SantKaustubh and Rajasekharan Ganesh and Padmavathy R.},
+    title = {
+Block Lanczos to Solve Integer Factorization Problem Using GPU’s},
+    howpublished = {International Conference on Computer Science and Information Technology, CCSIT 12},
+    year = {2012}
+}
+
+@article{DBLP:journals/concurrency/SchmidtAD13,
+  author    = {Bertil Schmidt and
+               Hans Aribowo and
+               Hoang{-}Vu Dang},
+  title     = {Iterative sparse matrix-vector multiplication for accelerating the
+               block Wiedemann algorithm over {GF(2)} on multi-graphics processing
+               unit systems},
+  journal   = {Concurrency and Computation: Practice and Experience},
+  volume    = {25},
+  number    = {4},
+  pages     = {586--603},
+  year      = {2013}
+}
+
+@inproceedings{DBLP:conf/ches/MieleBKL14,
+  author    = {Andrea Miele and
+               Joppe W. Bos and
+               Thorsten Kleinjung and
+               Arjen K. Lenstra},
+  title     = {Cofactorization on Graphics Processing Units},
+  booktitle = {{CHES}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {8731},
+  pages     = {335--352},
+  publisher = {Springer},
+  year      = {2014}
+}
+
+@misc{cryptoeprint:2020:014,
+    author = {Gaëtan Leurent and Thomas Peyrin},
+    title = {SHA-1 is a Shambles - First Chosen-Prefix Collision on SHA-1 and Application to the PGP Web of Trust},
+    howpublished = {Cryptology ePrint Archive, Report 2020/014},
+    year = {2020},
+    note = {\url{https://eprint.iacr.org/2020/014}},
+}
+
