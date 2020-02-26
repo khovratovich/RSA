@@ -20,12 +20,12 @@
 \maketitle
 
 \begin{abstract}
-    We provide security estimates for RSA moduli factoring based on the most recent factorization records and the development of large-scale cryptographic hardware. We demonstrate that by a conservative estimate, the 2048-bit number provides at most 90 bits of security, the 3072-bit number -- 112 bits of security, and at least a 4000-bit number is needed to match the 128-bit key recovery security of AES-128. 
+    We provide security estimates for RSA moduli factoring based on the most recent factorization records and the development of large-scale cryptographic hardware. As a reference point for the 128-bit security we take the cost of AES-128 key recovery on the best available hardware. We then demonstrate that by a conservative estimate for year 2022, the 2048-bit number provides at most 90 bits of security, the 3072-bit number -- 112 bits of security, and at least a 4000-bit number is needed to match the 128-bit key recovery. 
 \end{abstract}
 
 \section{Introduction}
 
-The complexity of factoring integers has been a long standing problem for decades. Many cryptosystems rely their security on the hardness of factoring, with RSA being the most famous example. Recently, several new constructions were  proposed and proven  secure assuming that factorization of certain number is unknown: verifiable delay functions (VDFs)~\cite{DBLP:conf/eurocrypt/Wesolowski19,DBLP:conf/crypto/BonehBBF18}, zero-knowledge proof systems in groups of unknown order~\cite{cryptoeprint:2019:1229}, and advanced cryptographic accumulators~\cite{cryptoeprint:2019:1494}. Performance of these schemes depends polynomially on the integer length, so it is crucial to determine how long an integer should be to withstand factorization efforts.
+The complexity of factoring integers has been a long standing problem for decades. Many cryptosystems rely their security on the hardness of factoring, with RSA being the most famous example. Recently, several new constructions were  proposed and proven  secure assuming that the factorization of a certain number is unknown: verifiable delay functions (VDFs)~\cite{DBLP:conf/eurocrypt/Wesolowski19,DBLP:conf/crypto/BonehBBF18}, zero-knowledge proof systems in groups of unknown order~\cite{cryptoeprint:2019:1229}, and advanced cryptographic accumulators~\cite{cryptoeprint:2019:1494}. Performance of these schemes depends polynomially on the integer length, so it is crucial to determine how long an integer should be to withstand factorization efforts.
 
 From the theoretical perspective, factorization has not been shown to be NP-complete (and many scholars believe it is not), so there is hope for fast algorithms. In practice, however, the best algorithms are subexponential: factoring an $n$-bit number takes about $2^{O(\sqrt[3]{n})}$ operations~\cite{lenstra1993development}, and there not has been much progress in the complexity since early 1990s. The hardest numbers to factor are those having two factors of the same length, these are known as RSA moduli.
 
@@ -64,7 +64,7 @@ In this report we make a more careful analysis of factoring algorithms, the most
 \section{Factoring algorithms}
 
 \paragraph{Development of factoring techniques.}
-A naive way to factor a number $N$ is trial division: try to divide $N$ by every possible prime number up to $\sqrt{N}$. The cost of this method is $O(\sqrt{N})$, and it is actually preferable for finding small factors. However, when, as in the RSA cryptosystem, the number to be factorized is a product of two equal-size primes
+A naive way to factor a number $N$ is trial division: try to divide $N$ by every possible prime number up to $\sqrt{N}$. The cost of this method is $O(\sqrt{N})$, and it is actually the best for finding small factors. However, when, as in the RSA cryptosystem, the number to be factorized is a product of two equal-size primes
 $$
 N = pq
 $$
@@ -137,19 +137,19 @@ and the following costs were incurred (each core is a 1 GHz CPU with 1-2 GB RAM)
     \item 2000 core-years for sieving, yielding $2^{31}$ relations after filtering.
     \item The matrix has dimension $2^{27.5}$  with average row weight $2^7$. It took 200 core-years.
 \end{itemize}
-Each core-year is about $2^{55}$ cycles, so the total complexity is $2^{66}$ cycles. 
+Each core-year is about $2^{55}$ cycles, so the total computational complexity is $2^{66}$ cycles. 
 
 The memory requirements are proportional to the number of relations we obtain, i.e. $\sqrt{L(n)}$. However, the memory usage is structured. Both sieving and matrix steps use the memory in a predictable way with only a few random accesses. Therefore, one may expect a memory-optimized version of the algorithm with similar time complexity.
 
-The factorization of the 795-bit number~\cite{factor795} required only 900 core-years on novel cores, or estimated 1700 core-years on old cores. It was concluded that various algorithmic improvements yield the constant factor of 3. We presume that electricity costs dominate in the attack. We take $2^8$ Wt as an average core consumption and $2^{-5}$ as a fair kWth price, so we  estimate the total cost of the attack as   $2^{17.8}$ USD, which roughly equivalents to 78-bit security by our definition (see Section~\ref{sec:measure}) for details.
+The factorization of the 795-bit number~\cite{factor795} required only 900 core-years on novel cores, or estimated 1700 core-years on old cores. It was concluded that various algorithmic improvements yield the constant factor of 3. Given that the chip design and manufacturing are one-time costs, we presume that the electricity costs dominate in the factorization of large numbers, when the total cost exceed a few million USD.  We take $2^8$ W as an average core consumption and $2^{-5}$ as a fair\footnote{A US hydro power plant reports a 3 cents per kWh retail price \url{https://www.chelanpud.org/about-us/newsroom/news/fast-facts}}. kWh price, so we  estimate the total cost of the attack as   $2^{17.8}$ USD, which roughly equivalents to 78-bit security by our definition (see Section~\ref{sec:measure}) for details.
 
 \section{Bigger moduli}
 \subsection{Approximations}\label{sec:approx}
-Formula ~\eqref{eq:sievecomp} implies that the 1024-bit number can be factored with complexity $2^{69}$ vs the 768-bit complexity of $2^{59}$, or 1000 times harder. This difference has been reasserted by the authors of the 768-bit factorization~\cite{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10}. We can take this as a reference point and make further estimates for 1536-bit and bigger moduli. The smoothness bounds and corresponding memory requirements will grow:
+Formula ~\eqref{eq:sievecomp} implies that the 1024-bit number can be factored with complexity 1000 times as much  as the 768-bit number. This difference has been reasserted by the authors of the 768-bit factorization~\cite{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10}. We can take this as a reference point and make further estimates for 1536-bit and bigger moduli. The smoothness bounds and corresponding memory requirements will grow:
 \begin{itemize}
-    \item Bound $2^{35}$ for 1024-bit would give complexity $2^{70}$
-    \item Bound $2^{41}$ for 1524 bits would give complexity $2^{85}$
-    \item Bound $2^{47}$ for 2048 bits would give complexity $2^{95}$.
+    \item Bound $2^{35}$ for 1024-bit would give  complexity $2^{76}$ CPU cycles
+    \item Bound $2^{41}$ for 1524 bits would give complexity $2^{91}$ cycles.
+    \item Bound $2^{47}$ for 2048 bits would give complexity $2^{101}$ cycles.
  \end{itemize}
  
 It was pointed out that a straightforward application of formula~\eqref{eq:sievecomp} overestimates the real costs of factoring bigger moduli even if we stay with the same hardware \cite{DBLP:conf/eurocrypt/KleinjungDLPS17}. We expect it due to the multiple reasons. Not all of them are equally likely to contribute, and the contributions differ.
@@ -194,8 +194,8 @@ It was pointed out that a straightforward application of formula~\eqref{eq:sieve
 In this section we suggest the following cost-inspired metric to evaluate the security level of cryptographic schemes. As the reference point, we consider the AES-128 cipher, which has 128-bit key and plaintext. It is widely assumed that to find the key one has to make about $2^{128}$ blockcipher calls. Whereas this number is clearly infeasible, we can consider a 80-bit version of the cipher where 48 bits of the key are known.  We also know how to construct a device that finds such a key given one plaintext-ciphertext pair, and we know how to create a network of such devices.
 Given that
 \begin{itemize}
-    \item Bitcoin network calculates $2^{67}$ double SHA-256 hashes per second (equivalent to $2^{69}$ AES calls).
-    \item Bitcoin mining is profitable with hashpower available on the market at costs of about $2^{59}$ hashes per USD\footnote{Calculated from \url{https://www.nicehash.com/my/marketplace/SHA256} at February 10th, 2020}.
+    \item Bitcoin network calculates $2^{67}$ double SHA-256 hashes per second\footnote{\url{https://www.blockchain.com/en/charts/hash-rate} reports 121 EH/sec for Feb 17, 2020.} (equivalent to $2^{69}$ AES calls).
+    \item Bitcoin mining is profitable with hashpower available on the market at costs of about $2^{59}$ hashes per USD\footnote{Calculated from \url{https://www.nicehash.com/my/marketplace/SHA256} at February 25th, 2020. It reports the one-day rate of 1 PH/sec for 0.0165 Bitcoin.}.
     \item The total amount of Bitcoin mined per day ($2^{16}$ seconds) is equivalent to about $2^{24}$ (16M) USD.
 \end{itemize}
 we can reliably estimate that $2^{80}$ AES calls would (amortized) cost about  $2^{19}$ USD when using ASICs. Note that an AES call takes $2^{-28}$ seconds on a modern CPU, so that $2^{80}$ calls would take $2^{52}$ core-seconds, or $2^{35}$ USD, which is $2^{16}$ times less cost-efficient. 
@@ -222,15 +222,15 @@ One can argue that memory-intensive computations would be less advantageous for 
 \begin{itemize}
     \item Super-optimistic. We assume that only CPU clusters will be effective for factoring of bigger numbers due to lack of interest from ASIC designers or due to lack of ASIC advantage. More time spent on polynomial selection won't give an advantage, and matrix step won't be improved.
     \item Optimistic. Here we assume that CPUs and GPUs will remain the main computing power, with GPU having the advantage $A_{hw}=2^3$ in costs. More time spent on polynomial selection would bring the factor $A_{ps}=2$ in performance, and matrix algorithms would improve with the same factor $A_{mtr}=2$. Moore's law will bring the factor $A_{Mr}$ of $2^2$.
-    \item Realistic. ASICs will reduce the costs significantly by about $A_{hw}=2^{10}$ due to high memory requirements. Improved polynomial selection and a new matrix algorithm would bring factors $2^3$ each additionally. Moore's law still gives $2^2$.
-     \item conservative. ASICs bring the reduction of $2^{16}$ we hoped for.
+    \item Realistic. ASICs will reduce the costs  by about $A_{hw}=2^{10}$ due to high memory requirements. Improved polynomial selection and a new matrix algorithm would bring factors $2^3$ each additionally. Moore's law still gives $2^2$.
+     \item Сonservative. ASICs bring the  reduction of $2^{16}$ we currently have for memoryless alogrithms.
      \item Super-conservative. A much faster matrix algorithm on-chip would allow factoring numbers with $A_{hw-mt}=1.2$ times more digits at the same cost.
  \end{itemize}
 
-As has been explained, the cost $C(795)$ of factoring 795-bit number is $2^{17.8}$ USD.
-Then we calculate the total cost $C(n)$ of factorization of an $n$-bit number in each scenario by the following formula:
+We have already estimated the cost $C(795)$ of factoring 795-bit number to be $2^{17.8}$ USD.
+Now we calculate the total cost $C(n)$ of factorization of an $n$-bit number in each scenario by the following formula:
 \begin{equation}
-    C(n/A_{hw-mt}) = A_{hw}\cdot A_{ps} \cdot A_{mtr} \cdot A_{Mr} \cdot C(795) \cdot \frac{L(n)}{L(795)}.
+    C(n/A_{hw-mt}) =L(n) \cdot \frac{ C(795)}{ A_{hw}\cdot A_{ps} \cdot A_{mtr} \cdot A_{Mr} \cdot L(795)}.
 \end{equation}
 These estimates are valid for year 2022. One may want to estimate the costs by year 2030, where the reduction could come from better algorithms, cheaper electricity, and more efficient ASICs (i.e. Moore's law). We expect that in optimistic and realistic scenarios improvements will be negligible, whereas for the conservative scenarios we add the combined factor $2^5$ and $2^{10}$, respectively.
  
