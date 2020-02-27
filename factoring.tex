@@ -20,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-    We provide security estimates for RSA moduli factoring based on the most recent factorization records and the development of large-scale cryptographic hardware. As a reference point for the 128-bit security we take the cost of AES-128 key recovery on the best available hardware. We then demonstrate that by a conservative estimate for year 2022, the 2048-bit number provides at most 90 bits of security, the 3072-bit number -- 112 bits of security, and at least a 4000-bit number is needed to match the 128-bit key recovery. 
+    We provide security estimates for RSA moduli factoring based on the most recent factorization records and the development of large-scale cryptographic hardware. As a reference point for the 128-bit security we take the cost of AES-128 key recovery on the best available hardware. We then demonstrate that by a conservative estimate for year 2022, the 2048-bit number provides at most 90 bits of security, the 3072-bit number -- 112 bits of security, and at least a 3900-bit number is needed to match the 128-bit security level of AES. 
 \end{abstract}
 
 \section{Introduction}
@@ -45,11 +45,11 @@ In this report we make a more careful analysis of factoring algorithms, the most
         Security level &80 & 100 & 112 & 128 & 256   \\
         \hline\hline
         \multicolumn{6}{|c|}{Our estimates}\\\hline\
-        Super-optimistic & 830 & 1425 & 1875 & 2600 &13000\\
-        Optimistic& 1000 & 1700 & 2200 & 3000 & 14500\\
-        Realistic & 1350 &2200 & 2750& 3600 & 17500\\
-        conservative & 1575 & 2400&3000& 4000 & 19500\\
-        Super-conservative& 1900 & 2900 &3600& 4800 & 23400\\         \hline\hline
+        Super-optimistic & 950 & 1600 & 2075 & 2850 &15500\\
+        Optimistic& 1150 & 1850 & 2400 & 3225 & 16500\\
+        Realistic & 1450 &2200 & 2800& 3700 & 17500\\
+        Conservative & 1500 & 2350&2950& 3900 & 18500\\
+        Super-conservative& 1800 & 2800 &3550& 4700 & 22200\\         \hline\hline
         \multicolumn{6}{|c|}{Third-party estimates}\\\hline
         \cite{lenstra2004key} - conservative & 1400 & 3100 & 4200 & 7000&-\\
         \cite{lenstra2004key} - optimistic & 1280 & 2200 & 3072 & 4200&-\\
@@ -125,6 +125,9 @@ The smoothness bounds and the degree of $f_1$ are chosen to minimize the total c
 $d_1 \approx \left(\frac{2.1\log N}{-0.6+1.4\log \log N }\right)^{1/3}$, which gives $d=5$ for modulus up to 800 bits and $d=6$ up to 1524 bits. 
 \end{itemize}
 
+
+The memory requirements are proportional to the number of relations we obtain, i.e. $\sqrt{L(n)}$. However, the memory usage is structured. Both sieving and matrix steps use the memory in a predictable way with only a few random accesses. Therefore, one may expect a memory-optimized version of the algorithm with similar time complexity.
+
 \subsection{Practical costs} We analyze the most recent factorization records~\cite{DBLP:conf/crypto/KleinjungAFLTBGKMORTZ10,DBLP:journals/iacr/BaiTZ12,factor795}. To factor the 768-bit RSA modulus, the following parameters were used:
 \begin{itemize}
     \item $d_1= 5$.
@@ -137,11 +140,20 @@ and the following costs were incurred (each core is a 1 GHz CPU with 1-2 GB RAM)
     \item 2000 core-years for sieving, yielding $2^{31}$ relations after filtering.
     \item The matrix has dimension $2^{27.5}$  with average row weight $2^7$. It took 200 core-years.
 \end{itemize}
-Each core-year is about $2^{55}$ cycles, so the total computational complexity is $2^{66}$ cycles. 
+Each core-year is about $2^{55}$ cycles, so the total computational complexity is $2^{66}$ cycles.  We take $2^5$ W as an average core consumption and $2^{-5}$ as a fair\footnote{A US hydro power plant reports a 3 cents per kWh retail price \url{https://www.chelanpud.org/about-us/newsroom/news/fast-facts}} kWh price, so we  estimate the amortized cost of this 2010 attack as   $2^{14.2}$ USD in current prices. The factorization of the 795-bit number~\cite{factor795} required only 900 core-years in 2019, which translates to about 
+\begin{equation}\label{c795}
+C(795) = 
+\underbrace{2^{9.8}}_{\text{core-years}}\cdot
+\underbrace{2^{3.1}}_{\text{year/kilo-hour}}\cdot
+\underbrace{2^{5}}_{\text{Watt/core}}\cdot
+\underbrace{2^{-5}}_{\text{USD/kWh}}=
+2^{12.9}    
+\end{equation}
+ USD worth of electricity.
 
-The memory requirements are proportional to the number of relations we obtain, i.e. $\sqrt{L(n)}$. However, the memory usage is structured. Both sieving and matrix steps use the memory in a predictable way with only a few random accesses. Therefore, one may expect a memory-optimized version of the algorithm with similar time complexity.
 
-The factorization of the 795-bit number~\cite{factor795} required only 900 core-years on novel cores, or estimated 1700 core-years on old cores. It was concluded that various algorithmic improvements yield the constant factor of 3. Given that the chip design and manufacturing are one-time costs, we presume that the electricity costs dominate in the factorization of large numbers, when the total cost exceed a few million USD.  We take $2^8$ W as an average core consumption and $2^{-5}$ as a fair\footnote{A US hydro power plant reports a 3 cents per kWh retail price \url{https://www.chelanpud.org/about-us/newsroom/news/fast-facts}}. kWh price, so we  estimate the total cost of the attack as   $2^{17.8}$ USD, which roughly equivalents to 78-bit security by our definition (see Section~\ref{sec:measure}) for details.
+%BREAK
+ %on novel cores, or estimated 1700 core-years on old cores. It was concluded that various algorithmic improvements yield the constant factor of 3. Given that the chip design and manufacturing are one-time costs, we presume that the electricity costs dominate in the factorization of large numbers, when the total cost exceed a few million USD.  , which roughly equivalents to 78-bit security by our definition (see Section~\ref{sec:measure}) for details.
 
 \section{Bigger moduli}
 \subsection{Approximations}\label{sec:approx}
@@ -182,7 +194,7 @@ It was pointed out that a straightforward application of formula~\eqref{eq:sieve
      
      \item \textbf{Matrix step}. Now we aim to find an element in the matrix kernel where the matrix is sparse and has dimensions $b\times b$. The Wiedemann algorithm on desktops runs in $O(b^2)$ time and currently  $b$ is chosen so that it is only a bit slower than the sieving step. We expect two improvements: 
      \begin{itemize}
-         \item Use of faster memory on-chip and thus a significant advantage in latency. In similar settings, Equihash miner, which utilizes 150 MB of RAM is $2^{17}$ times more cost-efficient than a CPU miner~\cite{equihashminer}.
+         \item Use of faster memory on-chip and thus a significant advantage in latency. 
          \item Use of faster, ASIC-dedicated matrix algorithms, as outlined in~\cite{bernstein01}. Bernstein conjectured that a sparse matrix of size $b^2$ (i.e. with $O(b)$ non-zero elements) can be processed in time $O(b^{1.5})$.
      \end{itemize}
      If  the latter conjecture holds, one can select a different sieving-matrix tradeoff. For example, we can factor a number $N'=N^{4/3}$ using the same $b^2$ integer, which are  tested for $b^{4/3}$-smoothness rather than for $b$-smoothness in the same $O(b^2)$ time yielding $b^{4/3}$ relations. These relations would then be processed in $b^{4/3*2} = b^2$ time. Thus this would give us huge increase in performance, cutting of the security level by 25\%. One should expect that the real advantage will be smaller.
@@ -198,7 +210,7 @@ Given that
     \item Bitcoin mining is profitable with hashpower available on the market at costs of about $2^{59}$ hashes per USD\footnote{Calculated from \url{https://www.nicehash.com/my/marketplace/SHA256} at February 25th, 2020. It reports the one-day rate of 1 PH/sec for 0.0165 Bitcoin.}.
     \item The total amount of Bitcoin mined per day ($2^{16}$ seconds) is equivalent to about $2^{24}$ (16M) USD.
 \end{itemize}
-we can reliably estimate that $2^{80}$ AES calls would (amortized) cost about  $2^{19}$ USD when using ASICs. Note that an AES call takes $2^{-28}$ seconds on a modern CPU, so that $2^{80}$ calls would take $2^{52}$ core-seconds, or $2^{35}$ USD, which is $2^{16}$ times less cost-efficient. 
+we can reliably estimate that $2^{80}$ AES calls would (amortized) cost about  $2^{19}$ USD when using ASICs. Note that an AES call takes $2^{-28}$ seconds on a modern CPU, so that $2^{80}$ calls would take $2^{52}$ core-seconds, or $2^{30}$ USD, which is $2^{11}$ times less cost-efficient. 
 We can make similar GPU estimates given the recent SHA-1 attack costs ($2^{63}$ hashes for $2^{16}$ USD)~\cite{cryptoeprint:2020:014}, which match well the ASIC-over-GPU advantage known from Bitcoin mining.
 
 Based on that, we think of 128-bit security as if the cost to break the primitive would be $2^{48}$ times that of AES-128 with 80-bit key, or $2^{67}$. This is well beyond the world GDP ($2^{46.5}$ USD, or 108-bit security). 
@@ -211,7 +223,7 @@ It is not trivial to make a sensible estimate of what 256-bit security means, as
     \item 256-bit secure construction becomes 128-bit secure if half of its key is known or the best attacks get quadratic speed-up.
 \end{itemize}
 
-One can argue that memory-intensive computations would be less advantageous for ASICs due to the increased chip size. In practice, however, we see that Equihash miners, consuming 3 times as much electricity as desktops and using 150 MB of memory ~\cite{equihashminer}, produce $2^{16}$ times as many solutions per second. We thus conclude that the difference between CPU and ASIC is close to $2^{15}$ even for big amounts of memory.
+One can argue that memory-intensive computations would be less advantageous for ASICs due to the increased chip size. In practice, however, we see that Equihash miners, consuming $2^{5.5}$ times as much electricity as desktops and using 150 MB of memory ~\cite{equihashminer}, produce $2^{16}$ times as many solutions per second. We thus conclude that the difference between CPU and ASIC is close to $2^{10}$ even for big amounts of memory.
  
  
  
@@ -222,19 +234,23 @@ One can argue that memory-intensive computations would be less advantageous for 
 \begin{itemize}
     \item Super-optimistic. We assume that only CPU clusters will be effective for factoring of bigger numbers due to lack of interest from ASIC designers or due to lack of ASIC advantage. More time spent on polynomial selection won't give an advantage, and matrix step won't be improved.
     \item Optimistic. Here we assume that CPUs and GPUs will remain the main computing power, with GPU having the advantage $A_{hw}=2^3$ in costs. More time spent on polynomial selection would bring the factor $A_{ps}=2$ in performance, and matrix algorithms would improve with the same factor $A_{mtr}=2$. Moore's law will bring the factor $A_{Mr}$ of $2^2$.
-    \item Realistic. ASICs will reduce the costs  by about $A_{hw}=2^{10}$ due to high memory requirements. Improved polynomial selection and a new matrix algorithm would bring factors $2^3$ each additionally. Moore's law still gives $2^2$.
-     \item Сonservative. ASICs bring the  reduction of $2^{16}$ we currently have for memoryless alogrithms.
-     \item Super-conservative. A much faster matrix algorithm on-chip would allow factoring numbers with $A_{hw-mt}=1.2$ times more digits at the same cost.
+    \item Realistic. ASICs will reduce the costs  by about $A_{hw}=2^{7}$ due to high memory requirements. Improved polynomial selection and a new matrix algorithm would bring factors $2^3$ each additionally. Moore's law still gives $2^2$.
+     \item Conservative. ASICs bring the  reduction of $2^{10}$ we currently have for memoryless alogrithms.
+     \item Super-conservative. A much faster matrix algorithm on-chip would allow factoring numbers with $A_{hw-mt}=1.2$ times more digits at the same cost as the conservative estimate.
  \end{itemize}
 
-We have already estimated the cost $C(795)$ of factoring 795-bit number to be $2^{17.8}$ USD.
+We have already estimated the (electricity) cost $C(795)$ of factoring 795-bit number to be $2^{12.9}$ USD (Equation~\eqref{c795}).
 Now we calculate the total cost $C(n)$ of factorization of an $n$-bit number in each scenario by the following formula:
 \begin{equation}
     C(n/A_{hw-mt}) =L(n) \cdot \frac{ C(795)}{ A_{hw}\cdot A_{ps} \cdot A_{mtr} \cdot A_{Mr} \cdot L(795)}.
 \end{equation}
-These estimates are valid for year 2022. One may want to estimate the costs by year 2030, where the reduction could come from better algorithms, cheaper electricity, and more efficient ASICs (i.e. Moore's law). We expect that in optimistic and realistic scenarios improvements will be negligible, whereas for the conservative scenarios we add the combined factor $2^5$ and $2^{10}$, respectively.
- 
+These estimates are valid for year 2022.
 We provide the results in Table~\ref{tab:cost}.
+
+
+ Based on the same formula, we make our own estimates of the moduli length needed to achieve certain security level. We use the cost-security model defined in Section~\ref{sec:measure} and show the results in Table~\ref{tab:sec}.
+
+ One may want to estimate the costs by year 2030 as well, where the reduction could come from better algorithms, cheaper electricity, and more efficient ASICs (i.e. Moore's law). We expect that in optimistic and realistic scenarios improvements will be negligible, whereas for the conservative scenarios we add the combined factor $2^5$ and $2^{10}$, respectively.
  \begin{table}[t]
     \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -242,16 +258,16 @@ We provide the results in Table~\ref{tab:cost}.
         \begin{tabular}{c}
             $\setminus$ \text{Scenario}  \\
              Length
-        \end{tabular}  &\text{Super-opt} & \text{Optimistic} & \text{Real} & \text{Pess} & \text{Super-pess}   \\
+        \end{tabular}  &\text{Super-opt} & \text{Optimistic} & \text{Real} & \text{Cons} & \text{Super-cons}   \\
         \hline\hline
-         795 & 200 K & 1.6 K& - & - & - \\
-         900 & 3.2 M & 25 K & - & -\\
-         1024 & 80 M & 640 K & 320 & 5 &-\\
-         1280 & 30 G & 240 M & 120 K & 1800 &5\\
-         1536 & 4 T & 32 G & 16 M & 250 K&1800\\
-         2048 & 32 P & 256 T & 128 G & 16 G& 120 M\\
-         3072 & - & 120 P & 60 T & 7.5 T & 60 G\\
-         4096 & - & - & - & 110 P & 800 T\\
+         795 & 8 K & -& - & - & - \\
+         900 & 128 K & 1 K & - & -&-\\
+         1024 & 3 M & 24 K & 100 & - &-\\
+         1280 & 1 G & 8 M & 32 K & 4 K &-\\
+         1536 & 200 G & 1.5 G & 6 M & 1.5 M&4 K\\
+         2048 & 1 P & 8 T & 32 G & 8 G& 2 M\\
+         3072 & - & 16 P & 64 T & 8 T & 10 T\\
+         4096 & - & - & - & 1000 E & 120 P\\
          \hline
     \end{tabular}
     \end{center}
@@ -259,7 +275,6 @@ We provide the results in Table~\ref{tab:cost}.
     \label{tab:cost}
 \end{table}
  
- Based on the same formula, we make our own estimates of the moduli length needed to achieve certain security level. We use the cost-security model defined in Section~\ref{sec:measure} and show the results in Table~\ref{tab:sec}.
  
  \section{Need for extensive research}
  We hightlight the need for advanced research, including VLSI designs and prototypes, in the following directions:
