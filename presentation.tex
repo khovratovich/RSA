@@ -1,0 +1,429 @@
+
+\documentclass[t]{beamer}
+
+\usepackage{graphicx,comment,amssymb,hyperref,array}
+\usetheme{Pittsburgh}
+\usecolortheme{crane}
+\usepackage{xcolor}
+\author{Dmitry Khovratovich}
+\institute{Ethereum Foundation}
+
+\title{Factoring Integers}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdfpagemode=FullScreen,
+}
+
+
+\begin{document}    
+\maketitle
+
+\begin{frame}[c]
+\begin{center}
+    \Large{Problem of Factoring}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Problem of Factoring}
+    Given $n$-bit number $N$, find prime $p_i$ and integer $d_i$ such that
+    $$
+    N = \prod_i p_i^{d_i}.
+    $$
+    The factorization is unique (up to the order of factors).\\[10pt]
+    
+    \pause Uniqueness of factorization is a property not only of the ring $\mathbb{Z}$ of integers, but also of $Z[x]$ and some other \emph{Dedekind domains}. %(for example, ring of integers over $Q[\sqrt{-7}]$. 
+    
+\end{frame}
+
+\begin{frame}{Problem of Factoring}
+    Given $n$-bit number $N$, find prime $p_i$ and integer $d_i$ such that
+    $$
+    N = \prod_i p_i^{d_i}.
+    $$
+   It is easy $(poly(n))$ to determine if $N$ is prime. Clearly, factoring is an NP problem, but it is not (known to be) NP-hard.
+    
+\end{frame}
+
+\begin{frame}{Simple Factoring}
+    For all $m<\sqrt{N}$
+    \begin{itemize}
+        \item Test if $m$ is prime;
+        \item Test if $m$ divides $N$.
+    \end{itemize}
+    Complexity about $\sqrt{N}$.
+%or
+ %   $$
+  %  2^{n/2} = e^{\frac{1}{2}ln N} =  L(1;0.5),
+   % $$
+    %where 
+    %$$
+    %L(\alpha;\beta) \approx e^{\beta ln^{\alpha}N}
+    %$$
+    
+\end{frame}
+
+\begin{frame}{Smarter Factoring}
+\begin{enumerate}
+    \item Generate $x,y$;
+    \item Test if $x^2 = y^2 \pmod{N}$;
+    \item If yes, $(x-y)(x+y)=0\pmod{N}$, so  $GCD(x-y,N)$ probably gives a factor of $N$, otherwise go to step 1.
+    
+\end{enumerate}
+    
+    Complexity about $\sqrt{N}$ again.
+\end{frame}
+
+\begin{frame}{Smarter Factoring}
+\begin{enumerate}
+    \item Generate $x,y$;
+    \item Test if $x^2 = y^2 \pmod{N}$;
+    \item If yes, $(x-y)$ probably divides $N$, otherwise go to step 1.
+    
+\end{enumerate}
+How to improve?
+\begin{itemize}
+    \item Generate $x,y$ such that the equation is more likely to hold. 
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[c]
+\begin{center}
+    \Large{Advance factoring methods}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Smart factoring}
+Suppose for some $x_i >\sqrt{N}$ 
+$$
+x_i^2 =z_i =  2^{a_i}3^{b_i}5^{c_i} \pmod{N}
+$$
+ i.e. its factors are only 2,3,5.
+Also
+\begin{align*}
+x_j^2 =z_j =  2^{a_j}3^{b_j}5^{c_j} \pmod{N}\\
+x_k^2 =z_k =  2^{a_k}3^{b_k}5^{c_k} \pmod{N}\\
+x_l^2 =z_l =  2^{a_l}3^{b_l}5^{c_l} \pmod{N}\end{align*}
+The matrix 
+$$
+\begin{pmatrix}
+a_i & b_i & c_i\\
+a_j & b_j & c_j\\
+a_k & b_k & c_k\\
+a_l & b_l & c_l\\
+\end{pmatrix}
+$$
+admits a linear combination $\bmod{\,2}$, so that
+$\alpha(a_i,b_i,c_i) + \beta(a_j,b_j,c_j)+\gamma (a_k,b_k,c_k) + \delta(a_l,b_l,c_l)=(0,0,0) \pmod{2}$.
+
+\end{frame}
+
+
+\begin{frame}{Smart factoring}
+\begin{align*}x_i^2 =z_i =  2^{a_i}3^{b_i}5^{c_i} \pmod{N}\\
+x_j^2 =z_j =  2^{a_j}3^{b_j}5^{c_j} \pmod{N}\\
+x_k^2 =z_k =  2^{a_k}3^{b_k}5^{c_k} \pmod{N}\\
+x_l^2 =z_l =  2^{a_l}3^{b_l}5^{c_l} \pmod{N}\end{align*}
+$$
+\alpha(a_i,b_i,c_i) + \beta(a_j,b_j,c_j)+\gamma (a_k,b_k,c_k) + \delta(a_l,b_l,c_l)=(0,0,0) \pmod{2}.
+$$
+Therefore 
+$$
+v^2 = (x_i^{\alpha}x_j^{\beta}x_k^{\gamma}x_l^{\delta})^2 = 
+4^{u_2}9^{u_3}25^{u_5} = w^2 \pmod{N}
+$$
+\pause This method works but the fraction of numbers divisible only by $2,3,5$ is low...
+
+\end{frame}
+
+\begin{frame}{Example}
+    Factor number 143 this way:
+    \begin{align*}
+        14^2, 15^2, 16^2 &= fail\\
+        17^2 = 289 &= 3\pmod{143}\\
+        18^2 &=fail\\
+        19^2 = 361 &= 75\pmod{143} = 3\cdot 5^2\\
+        20^2 &=fail\\
+        21^2 =441 &12\pmod{143} = 2\cdot 3^2\\
+        22^2, 25^2, 26^2, \ldots, 33^2 &=fail\\
+        34^2 =1156&=12\pmod{143} = 2^2\cdot 3
+    \end{align*}
+  \pause  Therefore
+    $$
+   37^2 =  (17\cdot 19)^2 = 3^2 \cdot 5^2 \pmod{143}
+    $$
+    and 
+    $$
+    (37-15)\cdot(37+15) = 0\pmod{143}; \quad GCD(22,143) = 11.
+    $$
+\end{frame}
+
+\begin{frame}{Even smarter factoring}
+Call $z$ $B$-smooth if all its factors smaller than $B$.
+\begin{enumerate}
+    \item Generate $x$;
+    \item Test if $z=x^2 \pmod{N}$ is $B$-smooth. If yes, add it to the table. This is \textbf{sieving}.
+    \item With $O(B)$ such $x$, find a linear dependency so that
+    $$
+    x_{i_1}^2x_{i_2}^2\cdots x_{i_B}^2 = w^2.
+    $$
+    This is \textbf{matrix step}.
+\end{enumerate}
+\pause Complexity:
+\begin{itemize}
+    \item The matrix step needs $O(B)$ combinations and works in $O(B^2)$ time (block Wiedemann algorithm for sparse matrices).
+    \item The sieving step needs time 
+    $$
+    T\approx \frac{B\cdot C_{test}[z\text{ is smooth}]}{Pr_{z,N,B}[z\text{ is $B$-smooth}]}
+    $$
+\end{itemize}
+
+The tradeoff is when the smoothness probability is $O(1/B)$, then both sieving and matrix step cost  $B^2$.
+     
+    
+
+\end{frame}
+
+\begin{frame}{Smoothness probability}
+
+
+Smaller $B$: more trials but smaller matrux:
+\begin{itemize}
+    \item If $B=const$ then the probability that $x<N$ is $B$-smooth is $1/N^{\ln B}$.
+    %L[1;1]   L[0;ln B] =  L[1;-1(1)/ln B] = N^{ln B}
+    \item If $B = e^{\sqrt{ln N}}$ the probability is $1/\sqrt{B}$. Then the complexity to find $B$ numbers is $B^{3/2}$. Recall the matrix step is $B^2$.
+    %L[1;1]  L[1/2;1]   = L[1/2;-1/2]
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Quadratic Sieve}
+
+Quadratic sieve (Pomerance 1982):
+\begin{enumerate}
+    \item Let $x = \sqrt{N}+\epsilon$ where $\epsilon =o(\sqrt{N})$;
+    \item Then $z=x^2 \approx 2\epsilon\sqrt{N} \pmod{N}$.
+    \item Test if $z=x^2 \pmod{N}$ is $B$-smooth. \item After finding $O(B/\ln(B))$ such $x$, construct
+    $$
+    y^2 = z^2\pmod{N}.
+    $$
+\end{enumerate}
+So we test smoothness for vector $\mathbf{z} = Q(\mathbf{x}) = \mathbf{x}^2-N$.
+$$
+Q(\lceil\sqrt{N}\rceil+1),Q(\lceil\sqrt{N}\rceil+2),\ldots,Q(\lceil\sqrt{N}\rceil+B^2)
+$$
+\end{frame}
+
+\begin{frame}{Quadratic Sieve}
+ Apparently $B$-smoothness can be tested faster than $O(B)$ per element for a big group of $x$:
+\begin{itemize}
+    \item Let $q <B$ be prime.
+    \item Find $x\approx \sqrt{N}$ such that $Q(x)=x^2-N=0\pmod{q} $.
+    \item Then for any $k$ we have
+    $$
+    Q(x+kq) = Q(x) = 0\pmod{q}
+    $$
+    i.e. $Q(x+kq)$ divisible by $q$.
+    \item Repeat for all $q$ to get smooth $z$ in the list.
+    \item This works for any polynomial $Q$.
+\end{itemize}
+
+Complexity is minimum for $B = e^{\sqrt{0.5 \ln N}}$
+\end{frame}
+
+\begin{frame}[c]
+\begin{center}
+    \Large{Number Field Sieve}
+    \end{center}
+\end{frame}
+
+\begin{frame}[c]{Number field sieve}
+    In Number Field Sieve (Pollard et al., 1993)  we  compute $z$ which are much smaller than $\sqrt{N}$ so that the smoothness probability is greater.
+\end{frame}
+
+\begin{frame}{NFS}
+    \begin{itemize}
+        \item Let $f$ be poly of degree $d$:
+    $$
+    f(m) = 0 \pmod{N}
+    $$
+    $m$ can be from $m$-ary representation of $N$.
+   \pause \item  Let $\alpha$ be its root over $\mathbb{N}$. Then $\phi(h\in \mathbb{Q}[\alpha]) =h(m)\in Z_N$ is homomorphism.
+    
+    
+\pause    \item If $\prod_i (a_i-b_i\alpha) = \beta^2\in \mathbb{Q}[\alpha]$ and $\prod_i(a-bm)=y^2$ then
+    \begin{multline*}
+    x^2 = (\phi(\beta))^2= \phi(\beta^2) = \phi(\prod_i (a_i-b_i\alpha)) = \\
+    \prod_i \phi((a_i-b_i\alpha)) = 
+    \prod_i (a_i-b_im) = y^2.
+    \end{multline*}
+\item We search for $(a,b)$ such that both $(a-bm)$  and $(a-\alpha m)$ are smooth, then there is a product that yields a square.
+ \end{itemize}
+   But how to find $(a,b)$ such that $(a-b\alpha)$ is smooth in $\mathbb{Q}[\alpha]$? %And what does this mean?
+
+\end{frame}
+
+\begin{frame}{Norms}
+First, $Z[\alpha]$ is (almost) a unique factorization domain: any ideal can be written as a product of prime ideals.
+
+    Define $\mathcal{N}(a-b\alpha) = b^df(a/b)$.
+    \begin{itemize}
+        \item It is multiplicative, so if $(a-b\alpha) $ is a square, so is $ b^df(a/b)$.
+        \item Let us search for $(a,b)$ such that $b^df(a/b)$ is $B$-smooth using \emph{lattice sieve} (a variant of quadratic sieve). 
+        \item We then solve   $\prod_i(a-b\alpha) = \beta^2$, i.e. compute square roots in $\mathbb{Z}[\alpha]$.
+        \item[*] To make square roots possible we have to add extra information to $b^df(a/b)$ thus making more columns in matrix.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary of NFS}
+    \begin{itemize}
+        \item Define $f$ of degree $d$ (usually 5) with root $m$ in $\mathbb{Z}_N$;
+        \item Find $B$ such $(a,b)$ such that both $(a-bm)$ and $b^df(a/b)$ are $B$-smooth;
+        \item Using fast matrix algorithms, find
+        $$
+        \mathcal{I}:\quad \prod_{i \in \mathcal{I}}(a_i-b_im) = y^2
+        $$
+        \item By construction, $\prod_{i \in \mathcal{I}}(a_i-b_i\alpha) = \beta^2$ for some unknown $\beta$, it is solved by computing a square root in $Q[\alpha]$ (also a difficult problem).
+        
+     \end{itemize}
+     The complexity is smaller since we need $a,b$ of size $B$, so that  $$
+     (a-bm)<b^df(a/b) <B^{d}N^{1/d}\approx N^{0.4},
+     $$
+     so that both are much smaller than $\sqrt{N}= e^{0.5 \ln N}$.
+     \end{frame}
+
+\begin{frame}{Complexity}
+
+     Complexity is
+     $$
+     L(n) = 2^{2.4\sqrt[3]{n}\sqrt[1.5]{\ln n}-16}
+     $$
+     which is about $50L(n)$ CPU cycles
+     and smoothness bound
+     $$
+     B = \sqrt{L(n)} = 2^{1.2\sqrt[3]{n}\sqrt[1.5]{\ln n}-8}
+     $$
+     Current factorization records:
+     \begin{itemize}
+         \item 768-bit (2010): 2200 core-years;
+         \item 795-bit (2019): 900 core-years;
+         \item 829-bit (2020):  2900 core-years.
+     \end{itemize}
+     Translating into electricity costs:
+     \begin{equation}\label{c795}
+C(795) = 
+\underbrace{2^{9.8}}_{\text{core-years}}\cdot
+\underbrace{2^{3.1}}_{\text{year/kilo-hour}}\cdot
+\underbrace{2^{5}}_{\text{Watt/core}}\cdot
+\underbrace{2^{-5}}_{\text{USD/kWh}}=
+2^{12.9}    
+\end{equation}
+ USD worth of electricity.
+\end{frame}
+
+\begin{frame}[c]
+\begin{center}
+    \Large{NFS Perspectives}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Complexity Perspectives}
+For the smoothness bound $B$
+    \begin{itemize}
+        \item Sieving: test  $O(B^2)$ integers   for $B$-smoothness. $O(B)$ memory and $O(B^2)$ time. Not random memory access, can be parallelized. The memory is used predictably. 
+        \item Linear: find a kernel element for a matrix of size $B\times B $ with $O(B)$ non-zero elements. Currently $O(B^2)$ time and $O(B)$ memory, but have potential $O(B^{1.5})$ time (with maybe more random memory access).
+    \end{itemize}   
+   \pause If we could run matrix step in $B^{1.5}$ time, we could increase the smoothness bound and break 1.25-longer numbers.
+    
+\end{frame}
+
+
+\begin{frame}{Cost Estimates}
+    \begin{itemize}
+        \item \textbf{Optimistic}: CPUs  and GPUs remain the most efficient devices for factoring.
+        \item \textbf{Realistic}: ASIC would reduce the costs by $2^7$ due to high memory requirements.
+        \item \textbf{Conservative}: ASIC would bring the advantage of $2^{10}$ over clusters that we observe for memoryless algorithms. Minor advances in algorithms.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{128-bit Security}
+    Based on Bitcoin mining, we estimate that 80-bit AES key can be found on ASIC for $2^{19}$ USD worth of electricity.
+    \begin{itemize}
+        \item 128-bit security -- cost of 128-bit key recovery on ASIC ($2^{67}$ USD).
+        \item 256-bit security -- should become 128-bit secure if a quadratic speed-up to algorithms is found.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Bounds for Moduli}
+    \begin{table}[t]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline 
+        Security level &80 & 100 & 112 & 128 & 256   \\
+        \hline\hline
+        \multicolumn{6}{|c|}{Our estimates}\\\hline\
+        Super-optimistic & 950 & 1600 & 2075 & 2850 &15500\\
+        Optimistic& 1150 & 1850 & 2400 & 3225 & 16500\\
+        Realistic & 1450 &2200 & 2800& 3700 & 17500\\
+        Conservative & 1500 & 2350&2950& 3900 & 18500\\
+        Super-conservative& 1800 & 2800 &3550& 4700 & 22200\\         \hline\hline
+     
+    \end{tabular}
+    \caption{Security of RSA moduli.}
+    \label{tab:sec}
+\end{table}
+\end{frame}
+
+
+\begin{frame}[c]
+\begin{center}
+    \Large{Extras}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Elliptic curve factoring}
+\begin{enumerate}
+    \item Generate elliptic curve $\mathcal{E}$ over $Z_N$;
+    \item Select random point $P$;
+    \item Compute $P_2=[2]P$, then $P_3=[3][2]P$, then $P_4=[4][3][2]P$, etc.. Use GCD for inversion modulo $N$.
+    \item Stop after $B$ primes or if GCD fails (=computes factor of $N$).
+\end{enumerate}
+Why it works?
+\begin{itemize}
+    \item Let $p$ be a factor, consider the same curve over $Z_p$ with order $N_p$.
+    \item If $N_p$ is $B$-smooth, then $P_B = [k][N_p]P = \infty$ on this curve.
+    \item If so the GCD calculation on the original curve should fail here.
+\end{itemize}
+        Works in $e^{\sqrt{2\ln p\ln\ln p}}$ time, so great for small factors and memoryless.
+\end{frame}
+
+\begin{frame}{Discrete logarithm}
+  Prime field $F_p$, find $\log_g h$:
+    \begin{enumerate}
+    \item Generate $\chi$;
+    \item Test if $z=g^{\chi} \pmod{p}$ is $B$-smooth: \textbf{sieving}.
+    \item After finding $O(B/\ln(B))$ such $\chi$, solve a linear system $\pmod{p-1}$ and obtain
+    $$
+    \log_g {q} \;\forall q<B
+    $$
+    \item Try for different $\tau$ if
+    $$
+    h g^{\tau}
+    $$
+    is $B$-smooth. If so, you get $\log_g h$.
+\end{enumerate}
+Similar to NFS algorithms apply to prime fields and their extensions.
+\end{frame}
+
+
+\begin{frame}[c]
+\begin{center}
+    \Large{Questions?}
+    \end{center}
+\end{frame}
+
+\end{document}
